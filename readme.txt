@@ -1,5 +1,5 @@
 === AI Provider for OpenRouter ===
-Contributors:      rtcamp
+Contributors:      rtcamp, milindmore22
 Tags:              ai, openrouter, llm, connector, image-generation
 Requires at least: 7.0
 Requires PHP:      7.4
@@ -7,38 +7,35 @@ Requires Plugins:  ai
 Stable tag:        1.0.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+Tested up to:      7.0
 
 OpenRouter provider for the WordPress AI Client.
 
 == Description ==
 
-This plugin provides OpenRouter integration for the WordPress AI Client.
-
-It lets WordPress route AI text and image generation requests to OpenRouter with configurable defaults.
-
-Used endpoints include:
-
-* `GET /v1/models`
-* `GET /v1/models?output_modality=image`
-* `POST /v1/chat/completions` (text)
-* `POST /v1/chat/completions` with `modalities=["image"]` (image)
+This plugin provides OpenRouter integration for the WordPress AI Client. It allows you to use OpenRouter's text and image generation capabilities directly from WordPress, with configurable model defaults and seamless image generation support.
 
 **Features:**
 
-* OpenRouter provider registration for WordPress AI Client
-* Text generation model override from plugin settings
-* Image generation model override from plugin settings
-* Dedicated image model autocomplete endpoint in settings
-* Image generation parsing from OpenRouter chat-completions image responses
+* OpenRouter provider registration for WordPress AI Client.
+* Configure different default models for text and image generation.
+* The Modal selection also displays the cost per 1K tokens or images for the selected model.
+* Text generation using OpenRouter's chat completions endpoint, supporting all chat modalities
+* Image generation using OpenRouter's chat completions image modality.
 * Settings page under **Settings > OpenRouter Settings**
 
 == Installation ==
-
 1. Ensure the WordPress AI plugin is installed and activated.
 2. Upload plugin files to `/wp-content/plugins/ai-provider-for-openrouter/`.
 3. Activate plugin through the Plugins menu in WordPress.
 4. Add your OpenRouter API key in **Settings > Connectors**.
 5. Configure defaults in **Settings > OpenRouter Settings**.
+
+== Screenshots ==
+1. Connector settings page showing OpenRouter API key configuration.
+2. OpenRouter settings page showing model selection and cost information.
+3. Example of generating post excerpt using OpenRouter in the WordPress editor.
+4. Example of generating an image using OpenRouter in the WordPress editor.
 
 == Frequently Asked Questions ==
 
@@ -50,22 +47,13 @@ Set it in **Settings > Connectors** for the OpenRouter connector.
 
 Use **Settings > OpenRouter Settings**.
 
-= Does image generation use `/images/generations`? =
+= How much does it cost to generate text and images? =
 
-No. This plugin uses `POST /v1/chat/completions` with `modalities=["image"]` for image generation.
+The cost depends on the models you choose. The settings page shows the cost per 1K tokens for text models and per image for image models.
 
-= How do I build a release zip? =
+= Which OpenRouter are selected by default? =
 
-Run `npm run plugin-zip` from the plugin root. It creates `ai-provider-for-openrouter.zip` and excludes development files from the archive.
-
-== Development ==
-
-* `composer run-script lint`
-* `composer run-script format`
-* `composer run-script phpstan`
-* `npm run lint:js`
-* `npm run lint:js:fix`
-* `npm run plugin-zip`
+The plugin defaults to `openrouter/free` for text and `black-forest-labs/flux.2-pro` for images, both free models are selected by default, but you can change this in the settings.
 
 == Changelog ==
 
@@ -74,3 +62,7 @@ Run `npm run plugin-zip` from the plugin root. It creates `ai-provider-for-openr
 * Initial release of the OpenRouter provider plugin.
 * Added text and image model settings.
 * Added OpenRouter image generation support via chat completions image modality.
+
+== Upgrade Notice ==
+= 1.0.0 =
+Initial release.
