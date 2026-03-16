@@ -18,6 +18,7 @@ Thumbs.db
 build/
 build-module/
 build-types/
+ai-provider-for-openrouter.zip
 
 # Environment
 .env
