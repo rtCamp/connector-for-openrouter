@@ -75,9 +75,9 @@ The plugin communicates with OpenRouter's OpenAI-compatible API at `https://open
 
 ## System Requirements
 
-- **WordPress:** 6.9 or higher
-- **Requires at least:** 6.9
-- **Tested up to:** 6.9
+- **WordPress:** 7.0 or higher
+- **Requires at least:** 7.0
+- **Tested up to:** 7.0
 - **Stable tag:** 1.0.0
 - **PHP:** 7.4 or higher
 - **Requires PHP:** 7.4
