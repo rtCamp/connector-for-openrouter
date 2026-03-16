@@ -1,0 +1,44 @@
+# Development and testing files
+/.github
+/.wordpress-org
+/node_modules
+/tests
+/bin
+/.editorconfig
+/.eslintignore
+/.eslintrc.json
+/.gitignore
+/.distignore
+/phpcs.xml.dist
+/phpstan.neon.dist
+/composer.json
+/composer.lock
+/package.json
+/package-lock.json
+/README.md
+/vendor
+
+# Runtime source that should not be distributed as standalone files
+/assets/src
+
+# Duplicate packaged folder and archives
+/ai-provider-for-openrouter
+/ai-provider-for-openrouter.zip
+*.zip
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# IDE files
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# OS junk
+.DS_Store
+._*
+Thumbs.db
+desktop.ini

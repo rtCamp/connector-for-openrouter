@@ -1,0 +1,29 @@
+{
+	"name": "ai-provider-for-openrouter",
+	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/rtcamp/ai-provider-for-openrouter.git"
+	},
+	"engines": {
+		"node": ">=22.0.0",
+		"npm": ">=10.0.0"
+	},
+	"devDependencies": {
+		"@wordpress/eslint-plugin": "^24.2.0",
+		"@wordpress/scripts": "^31.5.0",
+		"eslint": "^8.57.1",
+		"eslint-plugin-eslint-comments": "^3.2.0",
+		"eslint-plugin-import": "^2.32.0",
+		"npm-run-all": "^4.1.5"
+	},
+	"scripts": {
+		"lint:js": "wp-scripts lint-js",
+		"lint:js:fix": "npm run lint:js -- --fix",
+		"lint:php:fix": "composer run-script format",
+		"lint:php:stan": "composer run-script phpstan",
+		"lint:php": "composer run-script lint",
+		"lint": "npm-run-all --parallel lint:*",
+		"plugin-zip": "sh ./bin/plugin-zip.sh"
+	}
+}

@@ -1,0 +1,28 @@
+{
+	"root": true,
+	"extends": [
+		"plugin:@wordpress/eslint-plugin/recommended-with-formatting",
+		"plugin:import/recommended",
+		"plugin:eslint-comments/recommended"
+	],
+	"env": {
+		"browser": true
+	},
+	"settings": {
+		"import/resolver": {
+			"node": {
+				"extensions": [".js"]
+			}
+		}
+	},
+	"globals": {
+		"aiProviderForOpenRouterSettings": true
+	},
+	"rules": {
+		"eslint-comments/no-unlimited-disable": "error",
+		"@wordpress/no-unsafe-wp-apis": "warn",
+		"jsdoc/check-indentation": "error",
+		"no-shadow": "warn",
+		"camelcase": "off"
+	}
+}

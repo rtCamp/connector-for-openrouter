@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ruleset
+	name="WPCS for OpenRouter Provider"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/PHPCSStandards/PHP_CodeSniffer/master/phpcs.xsd"
+>
+	<description>Sniffs for AI Provider for OpenRouter plugin</description>
+
+	<file>./src/</file>
+	<file>./ai-provider-for-openrouter.php</file>
+
+	<exclude-pattern>**/build/**</exclude-pattern>
+	<exclude-pattern>**/node_modules/**</exclude-pattern>
+	<exclude-pattern>**/vendor/**</exclude-pattern>
+
+	<arg value="sp" />
+	<arg name="basepath" value="./" />
+	<arg name="colors" />
+	<arg name="extensions" value="php" />
+	<arg name="cache" value="tests/_output/phpcs-cache.json" />
+	<arg name="parallel" value="20" />
+	<arg name="severity" value="1" />
+
+	<config name="testVersion" value="8.1-" />
+	<config name="minimum_wp_version" value="6.8" />
+
+	<rule ref="WordPress-VIP-Go">
+		<!-- Deprecated: @todo remove in PHPCS 4.0 -->
+		<exclude name="Generic.Functions.CallTimePassByReference.NotAllowed" />
+
+		<!-- Conflicts with WordPress coding practices -->
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax.Found" />
+
+		<!-- Short closures and match are part of the project PHP baseline -->
+		<exclude name="Universal.CodeAnalysis.NoEchoSprintf" />
+
+		<!-- Only needed for procedural callers outside WordPress -->
+		<exclude name="WordPress.Security.NonceVerification.Missing" />
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+		<properties>
+			<property name="spacesCountAroundEqualsSign" value="0" />
+		</properties>
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses" />
+	<rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+		<properties>
+			<property name="searchAnnotations" value="true" />
+		</properties>
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
+	<rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
+		<exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint" />
+	</rule>
+	<rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint">
+		<exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint" />
+	</rule>
+	<rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
+		<exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint" />
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit">
+		<properties>
+			<property name="ignoreStandaloneIfInScope" value="true" />
+			<property name="ignoreOneLineTrailingIf" value="true" />
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.GlobalVariablesOverride" />
+	<rule ref="WordPress.Security.EscapeOutput" />
+	<rule ref="WordPress.Security.ValidatedSanitizedInput" />
+</ruleset>
