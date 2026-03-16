@@ -113,7 +113,7 @@ Navigate to **Settings > OpenRouter Settings** in your WordPress admin to config
 2. In WordPress admin, go to **Settings > Connectors**.
 3. Enter your OpenRouter API key and save.
 
-The provider is active only when valid credentials exist in the AI client registry.
+![Screenshot-1](./wp-assets/screenshot-1.png)
 
 #### Selecting Default Models
 
@@ -122,7 +122,29 @@ The provider is active only when valid credentials exist in the AI client regist
 3. Select your **Image Generation Model** for image generation tasks.
 4. Save your settings.
 
-If you set both fields to the same model ID, that model is registered once with combined text and image capabilities.
+![Screenshot-2](./wp-assets/screenshot-2.png)
+
+### Text Generation
+Text generation requests are routed through OpenRouter's chat completions endpoint:
+
+```json
+{
+	"model": "your-text-model",
+	"messages": [
+		{
+			"role": "user",
+			"content": "Write a short poem about WordPress plugins."
+		}
+	]
+}
+```
+#### WordPress Ability
+You can use OpenRouter for any WordPress AI Client feature that supports text generation, such as:
+- Title generation
+- Excerpt generation
+- Content Summarization
+
+![Screenshot-3](./wp-assets/screenshot-3.png)
 
 ### Image Generation
 
@@ -140,8 +162,12 @@ Image generation is routed through OpenRouter chat completions with the image mo
     "modalities": ["image"]
 }
 ```
+#### WordPress Ability
+Use OpenRouter for any AI Client feature that supports image generation, such as:
+- Featured image generation
+- Media library image generation
 
-Image URLs are parsed from `choices[].message.images[].image_url.url`, with a fallback parser for legacy response formats.
+![Screenshot-4](./wp-assets/screenshot-4.png)
 
 ### Environment Overrides
 
