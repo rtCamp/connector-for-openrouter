@@ -195,11 +195,11 @@ jobs:
       matrix:
         # Todo: reenable matrix items once repo is public.
         php: ["8.4"] #,  '8.3', '8.2', '8.1']
-        wp: [latest] #, trunk]
+        wp: [trunk] #, latest]
         coverage: [false]
         include:
           - php: "8.4"
-            wp: latest
+            wp: trunk
             coverage: true
     env:
       WP_ENV_PHP_VERSION: ${{ matrix.php }}
