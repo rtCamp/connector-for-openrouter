@@ -25,5 +25,10 @@
 		"lint:php": "composer run-script lint",
 		"lint": "npm-run-all --parallel lint:*",
 		"plugin-zip": "sh ./bin/plugin-zip.sh"
+	},
+	"overrides": {
+		"minimatch": ">=3.1.3",
+		"serialize-javascript": ">=7.0.3",
+		"webpack-dev-server@<=5.2.0": ">=5.2.1"
 	}
 }
