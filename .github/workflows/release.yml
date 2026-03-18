@@ -46,9 +46,6 @@ jobs:
         env:
           CI: true
 
-      - name: Build JavaScript assets
-        run: npm run build:prod
-
       - name: Create Artifact
         run: |
           npm run plugin-zip
