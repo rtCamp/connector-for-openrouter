@@ -10,6 +10,7 @@
 		"npm": ">=10.0.0"
 	},
 	"devDependencies": {
+		"@wordpress/env": "^10.39.0",
 		"@wordpress/eslint-plugin": "^24.2.0",
 		"@wordpress/scripts": "^31.5.0",
 		"eslint": "^8.57.1",
@@ -24,7 +25,9 @@
 		"lint:php:stan": "composer run-script phpstan",
 		"lint:php": "composer run-script lint",
 		"lint": "npm-run-all --parallel lint:*",
-		"plugin-zip": "sh ./bin/plugin-zip.sh"
+		"plugin-zip": "sh ./bin/plugin-zip.sh",
+		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/$(basename \"$(pwd)\")/ composer run-script test",
+		"wp-env": "wp-env"
 	},
 	"overrides": {
 		"eslint": "^8.57.1",
