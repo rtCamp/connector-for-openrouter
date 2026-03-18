@@ -19,12 +19,12 @@ parameters:
 			max: 80400
 		bootstrapFiles:
 				- ai-provider-for-openrouter.php
-				- ../../../wp-includes/php-ai-client/autoload.php
+
 		paths:
 				- ai-provider-for-openrouter.php
 				- src/
 		scanDirectories:
-				- ../../../wp-includes/php-ai-client/src/
+				- vendor/wordpress/php-ai-client/src/
 		excludePaths:
 			analyse:
 				- tests/
