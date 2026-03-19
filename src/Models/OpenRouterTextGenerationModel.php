@@ -14,7 +14,10 @@ namespace rtCamp\AiProviderForOpenRouter\Models;
 use rtCamp\AiProviderForOpenRouter\Provider\OpenRouterProvider;
 use rtCamp\AiProviderForOpenRouter\Settings\OpenRouterSettings;
 use WordPress\AiClient\Providers\Http\DTO\Request;
+use WordPress\AiClient\Providers\Http\DTO\Response;
 use WordPress\AiClient\Providers\Http\Enums\HttpMethodEnum;
+use WordPress\AiClient\Providers\Http\Exception\ResponseException;
+use WordPress\AiClient\Providers\Http\Util\ResponseUtil;
 use WordPress\AiClient\Providers\OpenAiCompatibleImplementation\AbstractOpenAiCompatibleTextGenerationModel;
 
 /**
@@ -50,6 +53,55 @@ class OpenRouterTextGenerationModel extends AbstractOpenAiCompatibleTextGenerati
 		}
 
 		return apply_filters( 'openrouter_text_generation_params', $params );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * Wraps the output schema in the name/schema/strict envelope required by
+	 * OpenAI-compatible structured-output APIs (which OpenRouter mirrors).
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array<string, mixed>|null $outputSchema The output schema.
+	 * @return array<string, mixed>
+	 */
+	protected function prepareResponseFormatParam( ?array $outputSchema ): array {
+		if ( is_array( $outputSchema ) ) {
+			return [
+				'type'        => 'json_schema',
+				'json_schema' => [
+					'name'   => 'result',
+					'schema' => $outputSchema,
+					'strict' => true,
+				],
+			];
+		}
+		return [ 'type' => 'json_object' ];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * Additionally checks for OpenRouter's error envelope, which can arrive
+	 * with a 200 HTTP status when a model-level error occurs.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param \WordPress\AiClient\Providers\Http\DTO\Response $response The HTTP response to check.
+	 * @throws \WordPress\AiClient\Providers\Http\Exception\ResponseException On error.
+	 */
+	protected function throwIfNotSuccessful( Response $response ): void {
+		ResponseUtil::throwIfNotSuccessful( $response );
+
+		// OpenRouter may return HTTP 200 with {"error":{...}} on model-level failures.
+		$data = $response->getData();
+		if ( isset( $data['error'] ) ) {
+			$message = ( is_array( $data['error'] ) && isset( $data['error']['message'] ) )
+				? (string) $data['error']['message']
+				: 'Unknown OpenRouter error.';
+			throw new ResponseException( $message );
+		}
 	}
 
 	/**
