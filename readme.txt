@@ -19,10 +19,9 @@ This plugin provides OpenRouter integration for the WordPress AI Client. It allo
 
 * OpenRouter provider registration for WordPress AI Client.
 * Configure different default models for text and image generation.
-* The Modal selection also displays the cost per 1K tokens or images for the selected model.
+* The Modal selection also displays the cost per 1M tokens or images for the selected model.
 * Text generation using OpenRouter's chat completions endpoint, supporting all chat modalities
 * Image generation using OpenRouter's chat completions image modality.
-* Settings page under **Settings > OpenRouter Settings**
 
 == Installation ==
 1. Ensure the WordPress AI plugin is installed and activated.
@@ -49,7 +48,7 @@ Use **Settings > OpenRouter Settings**.
 
 = How much does it cost to generate text and images? =
 
-The cost depends on the models you choose. The settings page shows the cost per 1K tokens for text models and per image for image models.
+The cost depends on the models you choose. The settings page shows the cost per 1M tokens for text models and per image for image models.
 
 = Which OpenRouter are selected by default? =
 
