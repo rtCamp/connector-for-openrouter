@@ -12,6 +12,7 @@ declare( strict_types=1 );
 namespace rtCamp\AiProviderForOpenRouter\Provider;
 
 use WordPress\AiClient\Providers\Contracts\ProviderAvailabilityInterface;
+use WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication;
 
 /**
  * Availability check for the OpenRouter provider.
@@ -23,9 +24,9 @@ class OpenRouterProviderAvailability implements ProviderAvailabilityInterface {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * OpenRouter is considered configured when an API key has been registered
-	 * via Settings > Connectors. Without a key requests will fail, but model
-	 * listing from the public /v1/models endpoint still works.
+	 * OpenRouter is considered configured when a non-empty API key has been
+	 * registered via Settings > Connectors or the OPENROUTER_API_KEY env var.
+	 * A fallback empty-key auth object registered at startup does not count.
 	 *
 	 * @since 1.0.0
 	 */
@@ -40,6 +41,15 @@ class OpenRouterProviderAvailability implements ProviderAvailabilityInterface {
 			return false;
 		}
 
-		return null !== $registry->getProviderRequestAuthentication( 'openrouter' );
+		$auth = $registry->getProviderRequestAuthentication( 'openrouter' );
+		if ( null === $auth ) {
+			return false;
+		}
+
+		if ( $auth instanceof ApiKeyRequestAuthentication ) {
+			return '' !== $auth->getApiKey();
+		}
+
+		return true;
 	}
 }
