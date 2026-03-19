@@ -20,6 +20,7 @@
 
 # Runtime source that should not be distributed as standalone files
 /assets/src
+/wp-assets
 
 # Duplicate packaged folder and archives
 /ai-provider-for-openrouter
