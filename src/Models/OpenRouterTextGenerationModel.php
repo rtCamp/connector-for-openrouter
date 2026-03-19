@@ -100,6 +100,7 @@ class OpenRouterTextGenerationModel extends AbstractOpenAiCompatibleTextGenerati
 			$message = ( is_array( $data['error'] ) && isset( $data['error']['message'] ) )
 				? (string) $data['error']['message']
 				: 'Unknown OpenRouter error.';
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message, not output.
 			throw new ResponseException( $message );
 		}
 	}
