@@ -17,6 +17,7 @@
 /package-lock.json
 /README.md
 /vendor
+/.nvmrc
 
 # Runtime source that should not be distributed as standalone files
 /assets/src
