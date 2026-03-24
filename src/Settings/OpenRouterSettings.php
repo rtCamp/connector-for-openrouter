@@ -25,7 +25,7 @@ class OpenRouterSettings {
 
 	private const OPTION_GROUP        = 'connector_for_openrouter_settings';
 	private const OPTION_NAME         = 'connector_for_openrouter_settings';
-	private const PAGE_SLUG           = 'connector_for_openrouter';
+	private const PAGE_SLUG           = 'connector-for-openrouter';
 	private const SECTION_ID          = 'connector_for_openrouter_main';
 	private const AJAX_ACTION_MODELS  = 'connector_for_openrouter_models';
 	private const AJAX_ACTION_IMAGE_MODELS = 'connector_for_openrouter_image_models';
