@@ -489,8 +489,7 @@ class OpenRouterSettings {
 	 */
 	public static function get_selected_image_model(): string {
 		$settings    = self::get_settings();
-		$image_model = isset( $settings[ self::KEY_IMAGE_MODEL ] ) ? (string) $settings[ self::KEY_IMAGE_MODEL ] : 'black-forest-labs/flux.2-pro';
-
+		$image_model = isset( $settings[ self::KEY_IMAGE_MODEL ] ) ? (string) $settings[ self::KEY_IMAGE_MODEL ] : 'openrouter/free';
 		return trim( $image_model );
 	}
 
