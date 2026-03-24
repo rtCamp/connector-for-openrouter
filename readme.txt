@@ -52,7 +52,7 @@ The cost depends on the models you choose. The settings page shows the cost per 
 
 = Which OpenRouter are selected by default? =
 
-The plugin defaults to `openrouter/free` for text and `black-forest-labs/flux.2-pro` for images, both free models are selected by default, but you can change this in the settings.
+The plugin defaults to `openrouter/free` for text and no image is selected by default for images as none available for free, but you can change this in the settings.
 
 == Changelog ==
 
