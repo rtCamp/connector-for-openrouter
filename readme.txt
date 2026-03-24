@@ -1,4 +1,4 @@
-=== AI Provider for OpenRouter ===
+=== Connector for OpenRouter ===
 Contributors:      rtcamp, milindmore22
 Tags:              ai, openrouter, llm, connector, image-generation
 Requires at least: 7.0
@@ -9,7 +9,7 @@ License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 Tested up to:      7.0
 
-OpenRouter provider for the WordPress AI Client.
+OpenRouter connector for the WordPress AI Client.
 
 == Description ==
 
@@ -25,7 +25,7 @@ This plugin provides OpenRouter integration for the WordPress AI Client. It allo
 
 == Installation ==
 1. Ensure the WordPress AI plugin is installed and activated.
-2. Upload plugin files to `/wp-content/plugins/ai-provider-for-openrouter/`.
+2. Upload plugin files to `/wp-content/plugins/connector-for-openrouter/`.
 3. Activate plugin through the Plugins menu in WordPress.
 4. Add your OpenRouter API key in **Settings > Connectors**.
 5. Configure defaults in **Settings > OpenRouter Settings**.

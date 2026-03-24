@@ -1,4 +1,4 @@
-# AI Provider for OpenRouter - Access Hundreds of AI Models in WordPress
+# Connector for OpenRouter - Access Hundreds of AI Models in WordPress
 
 **Contributors:** [rtCamp](https://profiles.wordpress.org/rtcamp/), [milindmore22](https://profiles.wordpress.org/milindmore22)
 
@@ -8,11 +8,11 @@ This plugin is licensed under the GPL v2 or later.
 
 ## Overview
 
-AI Provider for OpenRouter is a WordPress plugin that registers OpenRouter as an AI provider for the WordPress AI Client. It gives you access to hundreds of AI models for text and image generation through a single, unified API — configurable directly from your WordPress admin.
+Connector for OpenRouter is a WordPress plugin that registers OpenRouter as an AI provider for the WordPress AI Client. It gives you access to hundreds of AI models for text and image generation through a single, unified API — configurable directly from your WordPress admin.
 
 ## Description
 
-**AI Provider for OpenRouter** bridges the WordPress AI Client with OpenRouter's model marketplace, allowing you to:
+**Connector for OpenRouter** bridges the WordPress AI Client with OpenRouter's model marketplace, allowing you to:
 
 * **Access hundreds of AI models** including GPT-4, Claude, Gemini, and more through a single API key
 * **Generate text** using any OpenRouter-supported language model
@@ -22,7 +22,7 @@ AI Provider for OpenRouter is a WordPress plugin that registers OpenRouter as an
 
 This makes it easy to experiment with and deploy different AI models on your WordPress site without being locked into a single provider.
 
-## Why AI Provider for OpenRouter?
+## Why Connector for OpenRouter?
 
 Managing multiple AI providers in WordPress typically requires separate plugins, multiple API keys, and custom integrations for each model. This leads to:
 
@@ -31,7 +31,7 @@ Managing multiple AI providers in WordPress typically requires separate plugins,
 - **Duplicate configuration** scattered across multiple plugins
 - **Maintenance burden** as each provider's API evolves independently
 
-AI Provider for OpenRouter solves this by:
+Connector for OpenRouter solves this by:
 
 - **Unified Access:** One API key, hundreds of models from leading AI providers
 - **Standardized Interface:** All models exposed through the WordPress AI Client's consistent API
@@ -88,24 +88,24 @@ The plugin communicates with OpenRouter's OpenAI-compatible API at `https://open
 ### As a WordPress Plugin
 
 1. Ensure the **WordPress AI** plugin (`ai`) is installed and activated.
-2. Download or clone this plugin into `wp-content/plugins/ai-provider-for-openrouter`.
-3. Activate **AI Provider for OpenRouter** from the Plugins screen.
+2. Download or clone this plugin into `wp-content/plugins/connector-for-openrouter`.
+3. Activate **Connector for OpenRouter** from the Plugins screen.
 4. Add your OpenRouter API key in **Settings > Connectors**.
 5. Configure your default models in **Settings > OpenRouter Settings**.
 
 ### As a Composer Package
 
 ```bash
-composer require rtcamp/ai-provider-for-openrouter
+composer require rtcamp/connector-for-openrouter
 ```
 
 ## Usage Guide
 
 ### Accessing the Settings
 
-Navigate to **Settings > OpenRouter Settings** in your WordPress admin to configure AI Provider for OpenRouter.
+Navigate to **Settings > OpenRouter Settings** in your WordPress admin to configure Connector for OpenRouter.
 
-### Configuring AI Provider for OpenRouter
+### Configuring Connector for OpenRouter
 
 #### Setting Up Your API Key
 
@@ -178,9 +178,9 @@ For advanced deployments, you can override defaults using PHP constants or envir
 
 ## Development & Contributing
 
-AI Provider for OpenRouter is actively developed and maintained by [rtCamp](https://rtcamp.com/).
+Connector for OpenRouter is actively developed and maintained by [rtCamp](https://rtcamp.com/).
 
-- **Repository:** [https://github.com/rtcamp/ai-provider-for-openrouter](https://github.com/rtcamp/ai-provider-for-openrouter)
+- **Repository:** [https://github.com/rtcamp/connector-for-openrouter](https://github.com/rtcamp/connector-for-openrouter)
 
 We welcome contributions! Please open an issue or pull request on GitHub.
 
@@ -211,7 +211,7 @@ npm run lint
 npm run plugin-zip
 ```
 
-This creates `ai-provider-for-openrouter.zip` in the plugin root, excluding all development-only files.
+This creates `connector-for-openrouter.zip` in the plugin root, excluding all development-only files.
 
 ## Frequently Asked Questions
 
@@ -237,7 +237,7 @@ Yes. If you set both fields to the same model ID, the plugin registers that mode
 
 ### What happens if I don't configure an API key?
 
-The provider will be registered but inactive. AI Client requests routed to OpenRouter will fail until valid credentials are set in **Settings > Connectors**.
+The connector will be registered but inactive. AI Client requests routed to OpenRouter will fail until valid credentials are set in **Settings > Connectors**.
 
 ### How do I switch to a different AI model?
 
@@ -278,8 +278,8 @@ The plugin can be network-activated on multisite. Each site's settings are manag
 
 ## Support & Community
 
-- **Issues & Bug Reports:** [GitHub Issues](https://github.com/rtcamp/ai-provider-for-openrouter/issues)
-- **Source Code:** [GitHub Repository](https://github.com/rtcamp/ai-provider-for-openrouter)
+- **Issues & Bug Reports:** [GitHub Issues](https://github.com/rtcamp/connector-for-openrouter/issues)
+- **Source Code:** [GitHub Repository](https://github.com/rtcamp/connector-for-openrouter)
 
 ## License
 

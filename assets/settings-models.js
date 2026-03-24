@@ -1,4 +1,4 @@
-/** global aiProviderForOpenRouterSettings */
+/** global ConnectorForOpenrouterSettings */
 
 ( function() {
 	'use strict';
@@ -10,7 +10,7 @@
 	let isLoaded = false;
 	let isImageLoaded = false;
 
-	const settings = window.aiProviderForOpenRouterSettings || {};
+	const settings = window.ConnectorForOpenrouterSettings || {};
 	const i18n = settings.i18n || {};
 
 	/**
@@ -454,19 +454,19 @@
 	 */
 	function init() {
 		const searchInput = document.getElementById(
-			'ai_provider_for_openrouter_settings-model-search',
+			'connector_for_openrouter_settings-model-search',
 		);
 		const hiddenInput = document.getElementById(
-			'ai_provider_for_openrouter_settings-model-value',
+			'connector_for_openrouter_settings-model-value',
 		);
 		const dropdown = document.getElementById( 'openrouter-model-dropdown' );
 		const infoEl = document.getElementById( 'openrouter-model-info' );
 		const statusEl = document.getElementById( 'openrouter-model-status' );
 		const imageSearchInput = document.getElementById(
-			'ai_provider_for_openrouter_settings-image-model-search',
+			'connector_for_openrouter_settings-image-model-search',
 		);
 		const imageHiddenInput = document.getElementById(
-			'ai_provider_for_openrouter_settings-image-model-value',
+			'connector_for_openrouter_settings-image-model-value',
 		);
 		const imageDropdown = document.getElementById( 'openrouter-image-model-dropdown' );
 		const imageInfoEl = document.getElementById( 'openrouter-image-model-info' );

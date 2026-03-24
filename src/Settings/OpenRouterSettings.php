@@ -2,14 +2,14 @@
 /**
  * OpenRouter Settings.
  *
- * @package rtcamp/ai-provider-for-openrouter
+ * @package rtcamp/connector-for-openrouter
  *
  * @since 1.0.0
  */
 
 declare( strict_types=1 );
 
-namespace rtCamp\AiProviderForOpenRouter\Settings;
+namespace rtCamp\ConnectorForOpenrouter\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -23,19 +23,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class OpenRouterSettings {
 
-	private const OPTION_GROUP        = 'ai-provider-for-openrouter-settings';
-	private const OPTION_NAME         = 'ai_provider_for_openrouter_settings';
-	private const PAGE_SLUG           = 'ai-provider-for-openrouter';
-	private const SECTION_ID          = 'ai_provider_for_openrouter_main';
-	private const AJAX_ACTION_MODELS  = 'ai_provider_for_openrouter_models';
-	private const AJAX_ACTION_IMAGE_MODELS = 'ai_provider_for_openrouter_image_models';
-	private const NONCE_ACTION        = 'ai_provider_for_openrouter_nonce';
+	private const OPTION_GROUP        = 'connector_for_openrouter_settings';
+	private const OPTION_NAME         = 'connector_for_openrouter_settings';
+	private const PAGE_SLUG           = 'connector_for_openrouter';
+	private const SECTION_ID          = 'connector_for_openrouter_main';
+	private const AJAX_ACTION_MODELS  = 'connector_for_openrouter_models';
+	private const AJAX_ACTION_IMAGE_MODELS = 'connector_for_openrouter_image_models';
+	private const NONCE_ACTION        = 'connector_for_openrouter_nonce';
 	private const KEY_MODEL           = 'model';
 	private const KEY_IMAGE_MODEL     = 'image_model';
 	private const MODELS_TRANSIENT    = 'ai_openrouter_models_v1';
 	private const MODELS_IMAGE_TRANSIENT = 'ai_openrouter_image_models_v1';
 	private const MODELS_CACHE_TTL    = HOUR_IN_SECONDS;
-	private const OPENROUTER_MODELS_URL = 'https://openrouter.ai/api/v1/models';
+	private const OPENROUTER_MODELS_URL = 'https://openrouter.ai/api/v1/models?output_modality=text';
 	private const OPENROUTER_IMAGE_MODELS_URL = 'https://openrouter.ai/api/v1/models?output_modality=image';
 
 	/**
@@ -76,7 +76,7 @@ class OpenRouterSettings {
 
 		add_settings_field(
 			self::OPTION_NAME . '_model',
-			__( 'Default Model', 'ai-provider-for-openrouter' ),
+			__( 'Default Model', 'connector-for-openrouter' ),
 			[ $this, 'render_model_field' ],
 			self::PAGE_SLUG,
 			self::SECTION_ID,
@@ -85,7 +85,7 @@ class OpenRouterSettings {
 
 		add_settings_field(
 			self::OPTION_NAME . '_image_model',
-			__( 'Image Generation Model', 'ai-provider-for-openrouter' ),
+			__( 'Image Generation Model', 'connector-for-openrouter' ),
 			[ $this, 'render_image_model_field' ],
 			self::PAGE_SLUG,
 			self::SECTION_ID,
@@ -100,8 +100,8 @@ class OpenRouterSettings {
 	 */
 	public function register_settings_screen(): void {
 		add_options_page(
-			__( 'OpenRouter Settings', 'ai-provider-for-openrouter' ),
-			__( 'OpenRouter Settings', 'ai-provider-for-openrouter' ),
+			__( 'OpenRouter Settings', 'connector-for-openrouter' ),
+			__( 'OpenRouter Settings', 'connector-for-openrouter' ),
 			'manage_options',
 			self::PAGE_SLUG,
 			[ $this, 'render_screen' ]
@@ -149,7 +149,7 @@ class OpenRouterSettings {
 				<?php
 				printf(
 					/* translators: 1: opening anchor tag, 2: closing anchor tag */
-					esc_html__( 'OpenRouter provides access to hundreds of AI models through a single API. Set your API key in %1$sSettings > Connectors%2$s.', 'ai-provider-for-openrouter' ),
+					esc_html__( 'OpenRouter provides access to hundreds of AI models through a single API. Set your API key in %1$sSettings > Connectors%2$s.', 'connector-for-openrouter' ),
 					'<a href="' . esc_url( admin_url( 'options-connectors.php' ) ) . '">',
 					'</a>'
 				);
@@ -159,7 +159,7 @@ class OpenRouterSettings {
 				<?php
 				printf(
 					/* translators: 1: opening anchor tag, 2: closing anchor tag */
-					esc_html__( 'Browse available models and their pricing at %1$sopenrouter.ai/models%2$s.', 'ai-provider-for-openrouter' ),
+					esc_html__( 'Browse available models and their pricing at %1$sopenrouter.ai/models%2$s.', 'connector-for-openrouter' ),
 					'<a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer">',
 					'</a>'
 				);
@@ -200,10 +200,10 @@ class OpenRouterSettings {
 				type="text"
 				id="<?php echo esc_attr( $input_id ); ?>"
 				class="regular-text"
-				placeholder="<?php esc_attr_e( 'Type 3+ letters to search models…', 'ai-provider-for-openrouter' ); ?>"
+				placeholder="<?php esc_attr_e( 'Type 3+ letters to search models…', 'connector-for-openrouter' ); ?>"
 				value="<?php echo esc_attr( $current_model ); ?>"
 				autocomplete="off"
-				aria-label="<?php esc_attr_e( 'Search OpenRouter models', 'ai-provider-for-openrouter' ); ?>"
+				aria-label="<?php esc_attr_e( 'Search OpenRouter models', 'connector-for-openrouter' ); ?>"
 			/>
 			<input
 				type="hidden"
@@ -222,10 +222,10 @@ class OpenRouterSettings {
 		<span id="openrouter-model-status" style="margin-left:8px; font-size:12px;"></span>
 
 		<p class="description">
-			<?php esc_html_e( 'Choose a default OpenRouter model override. Leave empty to use the model requested by AI Client.', 'ai-provider-for-openrouter' ); ?>
+			<?php esc_html_e( 'Choose a default OpenRouter model override. Leave empty to use the model requested by AI Client.', 'connector-for-openrouter' ); ?>
 		</p>
 		<p class="description">
-			<?php esc_html_e( 'Suggestions show input price, output price (per 1M tokens), and context length.', 'ai-provider-for-openrouter' ); ?>
+			<?php esc_html_e( 'Suggestions show input price, output price (per 1M tokens), and context length.', 'connector-for-openrouter' ); ?>
 		</p>
 
 		<?php
@@ -249,10 +249,10 @@ class OpenRouterSettings {
 				type="text"
 				id="<?php echo esc_attr( $input_id ); ?>"
 				class="regular-text"
-				placeholder="<?php esc_attr_e( 'Type to search image models…', 'ai-provider-for-openrouter' ); ?>"
+				placeholder="<?php esc_attr_e( 'Type to search image models…', 'connector-for-openrouter' ); ?>"
 				value="<?php echo esc_attr( $current_image_model ); ?>"
 				autocomplete="off"
-				aria-label="<?php esc_attr_e( 'Search OpenRouter image generation models', 'ai-provider-for-openrouter' ); ?>"
+				aria-label="<?php esc_attr_e( 'Search OpenRouter image generation models', 'connector-for-openrouter' ); ?>"
 			/>
 			<input
 				type="hidden"
@@ -271,7 +271,7 @@ class OpenRouterSettings {
 		<span id="openrouter-image-model-status" style="margin-left:8px; font-size:12px;"></span>
 
 		<p class="description">
-			<?php esc_html_e( 'Choose a dedicated image generation model. This autocomplete lists all OpenRouter models that support image output.', 'ai-provider-for-openrouter' ); ?>
+			<?php esc_html_e( 'Choose a dedicated image generation model. This autocomplete lists all OpenRouter models that support image output.', 'connector-for-openrouter' ); ?>
 		</p>
 
 		<?php
@@ -290,16 +290,16 @@ class OpenRouterSettings {
 		}
 
 		wp_enqueue_script(
-			'ai-provider-for-openrouter-settings',
-			plugins_url( 'assets/settings-models.js', AI_PROVIDER_FOR_OPENROUTER_PLUGIN_FILE ),
+			'connector-for-openrouter-settings',
+			plugins_url( 'assets/settings-models.js', CONNECTOR_FOR_OPENROUTER_PLUGIN_FILE ),
 			[],
 			'1.0.0',
 			true
 		);
 
 		wp_localize_script(
-			'ai-provider-for-openrouter-settings',
-			'aiProviderForOpenRouterSettings',
+			'connector-for-openrouter-settings',
+			'ConnectorForOpenrouterSettings',
 			[
 				'ajaxUrl'       => esc_url_raw(
 					add_query_arg(
@@ -322,17 +322,17 @@ class OpenRouterSettings {
 				'selectedModel' => self::get_selected_model(),
 				'selectedImageModel' => self::get_selected_image_model(),
 				'i18n'          => [
-					'loading'     => __( 'Loading models…', 'ai-provider-for-openrouter' ),
-					'noResults'   => __( 'No models found.', 'ai-provider-for-openrouter' ),
-					'errorLoad'   => __( 'Could not load models.', 'ai-provider-for-openrouter' ),
-					'typeMore'    => __( 'Type at least 3 characters to search.', 'ai-provider-for-openrouter' ),
-					'modelsCount' => __( ' models available.', 'ai-provider-for-openrouter' ),
-					'inPrice'     => __( 'Prompt:', 'ai-provider-for-openrouter' ),
-					'outPrice'    => __( 'Completion:', 'ai-provider-for-openrouter' ),
-					'ctx'         => __( 'ctx', 'ai-provider-for-openrouter' ),
-					'perMillion'  => __( '/1M', 'ai-provider-for-openrouter' ),
-					'free'        => __( 'Free', 'ai-provider-for-openrouter' ),
-					'na'          => __( 'N/A', 'ai-provider-for-openrouter' ),
+					'loading'     => __( 'Loading models…', 'connector-for-openrouter' ),
+					'noResults'   => __( 'No models found.', 'connector-for-openrouter' ),
+					'errorLoad'   => __( 'Could not load models.', 'connector-for-openrouter' ),
+					'typeMore'    => __( 'Type at least 3 characters to search.', 'connector-for-openrouter' ),
+					'modelsCount' => __( ' models available.', 'connector-for-openrouter' ),
+					'inPrice'     => __( 'Prompt:', 'connector-for-openrouter' ),
+					'outPrice'    => __( 'Completion:', 'connector-for-openrouter' ),
+					'ctx'         => __( 'ctx', 'connector-for-openrouter' ),
+					'perMillion'  => __( '/1M', 'connector-for-openrouter' ),
+					'free'        => __( 'Free', 'connector-for-openrouter' ),
+					'na'          => __( 'N/A', 'connector-for-openrouter' ),
 				],
 			]
 		);
@@ -350,7 +350,7 @@ class OpenRouterSettings {
 		check_ajax_referer( self::NONCE_ACTION );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( __( 'Insufficient permissions.', 'ai-provider-for-openrouter' ), 403 );
+			wp_send_json_error( __( 'Insufficient permissions.', 'connector-for-openrouter' ), 403 );
 		}
 
 		$cached = get_transient( self::MODELS_TRANSIENT );
@@ -374,7 +374,7 @@ class OpenRouterSettings {
 			wp_send_json_error(
 				sprintf(
 					/* translators: %s: Error message. */
-					__( 'Could not fetch OpenRouter models. Error: %s', 'ai-provider-for-openrouter' ),
+					__( 'Could not fetch OpenRouter models. Error: %s', 'connector-for-openrouter' ),
 					$response->get_error_message()
 				),
 				500
@@ -385,7 +385,7 @@ class OpenRouterSettings {
 		$data = json_decode( $body, true );
 
 		if ( ! is_array( $data ) || ! isset( $data['data'] ) || ! is_array( $data['data'] ) ) {
-			wp_send_json_error( __( 'Unexpected response from OpenRouter models endpoint.', 'ai-provider-for-openrouter' ), 500 );
+			wp_send_json_error( __( 'Unexpected response from OpenRouter models endpoint.', 'connector-for-openrouter' ), 500 );
 		}
 
 		$models = array_values(
@@ -414,7 +414,7 @@ class OpenRouterSettings {
 		check_ajax_referer( self::NONCE_ACTION );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( __( 'Insufficient permissions.', 'ai-provider-for-openrouter' ), 403 );
+			wp_send_json_error( __( 'Insufficient permissions.', 'connector-for-openrouter' ), 403 );
 		}
 
 		$cached = get_transient( self::MODELS_IMAGE_TRANSIENT );
@@ -438,7 +438,7 @@ class OpenRouterSettings {
 			wp_send_json_error(
 				sprintf(
 					/* translators: %s: Error message. */
-					__( 'Could not fetch OpenRouter image models. Error: %s', 'ai-provider-for-openrouter' ),
+					__( 'Could not fetch OpenRouter image models. Error: %s', 'connector-for-openrouter' ),
 					$response->get_error_message()
 				),
 				500
@@ -449,7 +449,7 @@ class OpenRouterSettings {
 		$data = json_decode( $body, true );
 
 		if ( ! is_array( $data ) || ! isset( $data['data'] ) || ! is_array( $data['data'] ) ) {
-			wp_send_json_error( __( 'Unexpected response from OpenRouter image models endpoint.', 'ai-provider-for-openrouter' ), 500 );
+			wp_send_json_error( __( 'Unexpected response from OpenRouter image models endpoint.', 'connector-for-openrouter' ), 500 );
 		}
 
 		$models = array_values(

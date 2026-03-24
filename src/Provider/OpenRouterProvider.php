@@ -2,18 +2,18 @@
 /**
  * OpenRouter Provider.
  *
- * @package rtcamp/ai-provider-for-openrouter
+ * @package rtcamp/connector-for-openrouter
  *
  * @since 1.0.0
  */
 
 declare( strict_types=1 );
 
-namespace rtCamp\AiProviderForOpenRouter\Provider;
+namespace rtCamp\ConnectorForOpenrouter\Provider;
 
-use rtCamp\AiProviderForOpenRouter\Metadata\OpenRouterModelMetadataDirectory;
-use rtCamp\AiProviderForOpenRouter\Models\OpenRouterImageGenerationModel;
-use rtCamp\AiProviderForOpenRouter\Models\OpenRouterTextGenerationModel;
+use rtCamp\ConnectorForOpenrouter\Metadata\OpenRouterModelMetadataDirectory;
+use rtCamp\ConnectorForOpenrouter\Models\OpenRouterImageGenerationModel;
+use rtCamp\ConnectorForOpenrouter\Models\OpenRouterTextGenerationModel;
 use WordPress\AiClient\Common\Exception\RuntimeException;
 use WordPress\AiClient\Providers\ApiBasedImplementation\AbstractApiProvider;
 use WordPress\AiClient\Providers\Contracts\ModelMetadataDirectoryInterface;
@@ -98,8 +98,8 @@ class OpenRouterProvider extends AbstractApiProvider {
 			ProviderTypeEnum::cloud(),
 			'https://openrouter.ai/docs/api/reference/overview',
 			RequestAuthenticationMethod::apiKey(),
-			__( 'OpenRouter is a unified API gateway for hundreds of AI models from leading providers including Anthropic, Google, Meta, Mistral, and more.', 'ai-provider-for-openrouter' ),
-			AI_PROVIDER_FOR_OPENROUTER_PLUGIN_DIR . 'assets/images/openrouter-logo.svg'
+			__( 'OpenRouter is a unified API gateway for hundreds of AI models from leading providers including Anthropic, Google, Meta, Mistral, and more.', 'connector-for-openrouter' ),
+			CONNECTOR_FOR_OPENROUTER_PLUGIN_DIR . 'assets/images/openrouter-logo.svg'
 		);
 	}
 

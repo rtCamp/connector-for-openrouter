@@ -1,9 +1,9 @@
 {
-	"name": "ai-provider-for-openrouter",
+	"name": "connector-for-openrouter",
 	"private": true,
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/rtcamp/ai-provider-for-openrouter.git"
+		"url": "https://github.com/rtcamp/connector-for-openrouter.git"
 	},
 	"engines": {
 		"node": ">=22.0.0",

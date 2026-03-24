@@ -2,14 +2,14 @@
 /**
  * OpenRouter Provider Availability.
  *
- * @package rtcamp/ai-provider-for-openrouter
+ * @package rtcamp/connector-for-openrouter
  *
  * @since 1.0.0
  */
 
 declare( strict_types=1 );
 
-namespace rtCamp\AiProviderForOpenRouter\Provider;
+namespace rtCamp\ConnectorForOpenrouter\Provider;
 
 use WordPress\AiClient\Providers\Contracts\ProviderAvailabilityInterface;
 use WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication;
