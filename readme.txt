@@ -1,5 +1,5 @@
 === Connector for OpenRouter ===
-Contributors:      rtcamp, milindmore22
+Contributors:      rtcamp, milindmore22, vishal4669, aishwarryapande, aviralmittal89
 Tags:              ai, openrouter, llm, connector, image-generation
 Requires at least: 7.0
 Requires PHP:      7.4

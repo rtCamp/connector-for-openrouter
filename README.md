@@ -1,6 +1,6 @@
 # Connector for OpenRouter - Access Hundreds of AI Models in WordPress
 
-**Contributors:** [rtCamp](https://profiles.wordpress.org/rtcamp/), [milindmore22](https://profiles.wordpress.org/milindmore22)
+**Contributors:** [rtCamp](https://profiles.wordpress.org/rtcamp/), [milindmore22](https://profiles.wordpress.org/milindmore22), [vishal4669](https://profiles.wordpress.org/vishal4669/), [aviralmittal89](https://profiles.wordpress.org/aviralmittal89/)
 
 **Tags:** WordPress, AI, OpenRouter, Text Generation, Image Generation, AI Models, ChatGPT, Claude, Gemini
 
