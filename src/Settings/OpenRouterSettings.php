@@ -273,6 +273,12 @@ class OpenRouterSettings {
 		<p class="description">
 			<?php esc_html_e( 'Choose a dedicated image generation model. This autocomplete lists all OpenRouter models that support image output.', 'connector-for-openrouter' ); ?>
 		</p>
+		
+		<hr />
+
+		<p class="description" style="color:#e91e63;">
+			<?php esc_html_e( 'Be aware that pricing for some models is based on average text and image output, which isn\'t listed here. Please verify the exact pricing at openrouter.ai/models.', 'connector-for-openrouter' ); ?>
+		</p>
 
 		<?php
 	}
