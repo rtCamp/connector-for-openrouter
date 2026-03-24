@@ -2,21 +2,21 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: AI Provider for OpenRouter 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-openrouter\n"
+"Project-Id-Version: Connector for OpenRouter 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ai-provider-for-openrouter\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-03-20T06:44:11+00:00\n"
+"POT-Creation-Date: 2026-03-24T09:08:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: connector-for-openrouter\n"
 
 #. Plugin Name of the plugin
 #: connector-for-openrouter.php
-msgid "AI Provider for OpenRouter"
+msgid "Connector for OpenRouter"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -40,16 +40,16 @@ msgid "https://rtcamp.com"
 msgstr ""
 
 #. translators: 1: Required PHP version, 2: Current PHP version
-#: connector-for-openrouter.php:69
+#: connector-for-openrouter.php:70
 msgid "The OpenRouter Provider plugin requires PHP version %1$s or higher. You are running PHP version %2$s."
 msgstr ""
 
 #. translators: 1: Required WordPress version, 2: Current WordPress version
-#: connector-for-openrouter.php:101
+#: connector-for-openrouter.php:102
 msgid "The OpenRouter Provider plugin requires WordPress version %1$s or higher. You are running WordPress version %2$s."
 msgstr ""
 
-#: connector-for-openrouter.php:128
+#: connector-for-openrouter.php:129
 msgid "The OpenRouter Provider plugin requires the WordPress AI Client (php-ai-client) to be installed."
 msgstr ""
 
@@ -112,69 +112,73 @@ msgstr ""
 msgid "Choose a dedicated image generation model. This autocomplete lists all OpenRouter models that support image output."
 msgstr ""
 
-#: src/Settings/OpenRouterSettings.php:325
-msgid "Loading models…"
-msgstr ""
-
-#: src/Settings/OpenRouterSettings.php:326
-msgid "No models found."
-msgstr ""
-
-#: src/Settings/OpenRouterSettings.php:327
-msgid "Could not load models."
-msgstr ""
-
-#: src/Settings/OpenRouterSettings.php:328
-msgid "Type at least 3 characters to search."
-msgstr ""
-
-#: src/Settings/OpenRouterSettings.php:329
-msgid " models available."
-msgstr ""
-
-#: src/Settings/OpenRouterSettings.php:330
-msgid "Prompt:"
+#: src/Settings/OpenRouterSettings.php:280
+msgid "Be aware that pricing for some models is based on average text and image output, which isn't listed here. Please verify the exact pricing at openrouter.ai/models."
 msgstr ""
 
 #: src/Settings/OpenRouterSettings.php:331
-msgid "Completion:"
+msgid "Loading models…"
 msgstr ""
 
 #: src/Settings/OpenRouterSettings.php:332
-msgid "ctx"
+msgid "No models found."
 msgstr ""
 
 #: src/Settings/OpenRouterSettings.php:333
-msgid "/1M"
+msgid "Could not load models."
 msgstr ""
 
 #: src/Settings/OpenRouterSettings.php:334
-msgid "Free"
+msgid "Type at least 3 characters to search."
 msgstr ""
 
 #: src/Settings/OpenRouterSettings.php:335
+msgid " models available."
+msgstr ""
+
+#: src/Settings/OpenRouterSettings.php:336
+msgid "Prompt:"
+msgstr ""
+
+#: src/Settings/OpenRouterSettings.php:337
+msgid "Completion:"
+msgstr ""
+
+#: src/Settings/OpenRouterSettings.php:338
+msgid "ctx"
+msgstr ""
+
+#: src/Settings/OpenRouterSettings.php:339
+msgid "/1M"
+msgstr ""
+
+#: src/Settings/OpenRouterSettings.php:340
+msgid "Free"
+msgstr ""
+
+#: src/Settings/OpenRouterSettings.php:341
 msgid "N/A"
 msgstr ""
 
-#: src/Settings/OpenRouterSettings.php:353
-#: src/Settings/OpenRouterSettings.php:417
+#: src/Settings/OpenRouterSettings.php:359
+#: src/Settings/OpenRouterSettings.php:423
 msgid "Insufficient permissions."
 msgstr ""
 
 #. translators: %s: Error message.
-#: src/Settings/OpenRouterSettings.php:377
+#: src/Settings/OpenRouterSettings.php:383
 msgid "Could not fetch OpenRouter models. Error: %s"
 msgstr ""
 
-#: src/Settings/OpenRouterSettings.php:388
+#: src/Settings/OpenRouterSettings.php:394
 msgid "Unexpected response from OpenRouter models endpoint."
 msgstr ""
 
 #. translators: %s: Error message.
-#: src/Settings/OpenRouterSettings.php:441
+#: src/Settings/OpenRouterSettings.php:447
 msgid "Could not fetch OpenRouter image models. Error: %s"
 msgstr ""
 
-#: src/Settings/OpenRouterSettings.php:452
+#: src/Settings/OpenRouterSettings.php:458
 msgid "Unexpected response from OpenRouter image models endpoint."
 msgstr ""
