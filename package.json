@@ -10,7 +10,7 @@
 		"npm": ">=10.0.0"
 	},
 	"devDependencies": {
-		"@wordpress/eslint-plugin": "^24.2.0",
+		"@wordpress/eslint-plugin": "^25.0.0",
 		"@wordpress/scripts": "^31.5.0",
 		"eslint": "^8.57.1",
 		"eslint-plugin-eslint-comments": "^3.2.0",
