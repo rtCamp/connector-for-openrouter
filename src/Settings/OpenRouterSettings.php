@@ -15,7 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 /**
  * Class for OpenRouter settings in the WordPress admin.
  *
@@ -299,7 +298,7 @@ class OpenRouterSettings {
 			'connector-for-openrouter-settings',
 			plugins_url( 'assets/settings-models.js', CONNECTOR_FOR_OPENROUTER_PLUGIN_FILE ),
 			[],
-			'1.0.0',
+			CONNECTOR_FOR_OPENROUTER_VERSION,
 			true
 		);
 

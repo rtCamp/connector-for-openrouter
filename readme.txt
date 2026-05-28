@@ -56,6 +56,12 @@ The plugin defaults to `openrouter/free` for text and `openrouter/auto` for imag
 
 == Changelog ==
 
+= 1.0.1 =
+
+* Change default image model to `openrouter/auto` since there are no free options available.
+* Update dependencies and tested compatibility with WordPress 7.0.
+* Add additional costs information below the model selection in settings.
+
 = 1.0.0 =
 
 * Initial release of the OpenRouter provider plugin.

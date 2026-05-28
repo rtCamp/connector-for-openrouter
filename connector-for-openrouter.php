@@ -6,7 +6,7 @@
  * Requires at least: 7.0
  * Requires PHP:      7.4
  * Requires Plugins:  ai
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            rtCamp
  * Author URI:        https://rtcamp.com
  * License:           GPL-2.0-or-later
@@ -25,6 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+define( 'CONNECTOR_FOR_OPENROUTER_VERSION', '1.0.1' );
 define( 'CONNECTOR_FOR_OPENROUTER_MIN_PHP_VERSION', '7.4' );
 define( 'CONNECTOR_FOR_OPENROUTER_MIN_WP_VERSION', '6.9' );
 define( 'CONNECTOR_FOR_OPENROUTER_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
