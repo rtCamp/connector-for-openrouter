@@ -39,15 +39,23 @@
 
 		if ( key === 'image' || key === 'web_search' ) {
 			const unit = key === 'image' ? ' / image' : ' / req';
-			let formatted = price.toFixed( 8 );
-			formatted = formatted.replace( /0+$/, '' );
-			if ( formatted.endsWith( '.' ) ) {
-				formatted = formatted + '00';
-			} else {
-				const parts = formatted.split( '.' );
-				if ( parts[ 1 ] && parts[ 1 ].length === 1 ) {
-					formatted = formatted + '0';
+			let formatted = '';
+			const exponent = Math.floor( Math.log( price ) / Math.LN10 );
+			if ( exponent < 0 ) {
+				const decimals = Math.max( 2, -exponent + 2 );
+				const cappedDecimals = Math.min( 14, decimals );
+				formatted = price.toFixed( cappedDecimals );
+				formatted = formatted.replace( /0+$/, '' );
+				if ( formatted.endsWith( '.' ) ) {
+					formatted = formatted + '00';
+				} else {
+					const parts = formatted.split( '.' );
+					if ( parts[ 1 ] && parts[ 1 ].length === 1 ) {
+						formatted = formatted + '0';
+					}
 				}
+			} else {
+				formatted = price.toFixed( 2 );
 			}
 			return '$' + formatted + unit;
 		}
