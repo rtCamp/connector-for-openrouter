@@ -14,14 +14,15 @@
 	const i18n = settings.i18n || {};
 
 	/**
-	 * Formats a per-token price string from OpenRouter into a human-readable
-	 * "$ X.XX /1M" label. Prices from the API are expressed as per-token values;
-	 * multiply by 1 000 000 to get the more intuitive per-million-token rate.
+	 * Formats a per-token or per-unit price string from OpenRouter into a human-readable
+	 * label. Prices for tokens are multiplied by 1,000,000 to express them per 1M tokens.
+	 * Prices for absolute units (like image or web search) are displayed directly.
 	 *
-	 * @param {string|undefined} priceStr Raw price value from the API (e.g. "0.000015").
+	 * @param {string|undefined} priceStr Raw price value from the API.
+	 * @param {string|undefined} key      The dictionary key of this price (e.g. 'image', 'web_search').
 	 * @return {string} Formatted price label.
 	 */
-	function formatPrice( priceStr ) {
+	function formatPrice( priceStr, key ) {
 		if ( ! priceStr ) {
 			return i18n.na || 'N/A';
 		}
@@ -29,9 +30,36 @@
 		if ( isNaN( price ) ) {
 			return i18n.na || 'N/A';
 		}
+		if ( price < 0 ) {
+			return 'Unavailable';
+		}
 		if ( price === 0 ) {
 			return i18n.free || 'Free';
 		}
+
+		if ( key === 'image' || key === 'web_search' ) {
+			const unit = key === 'image' ? ' / image' : ' / req';
+			let formatted = '';
+			const exponent = Math.floor( Math.log( price ) / Math.LN10 );
+			if ( exponent < 0 ) {
+				const decimals = Math.max( 2, -exponent + 2 );
+				const cappedDecimals = Math.min( 14, decimals );
+				formatted = price.toFixed( cappedDecimals );
+				formatted = formatted.replace( /0+$/, '' );
+				if ( formatted.endsWith( '.' ) ) {
+					formatted = formatted + '00';
+				} else {
+					const parts = formatted.split( '.' );
+					if ( parts[ 1 ] && parts[ 1 ].length === 1 ) {
+						formatted = formatted + '0';
+					}
+				}
+			} else {
+				formatted = price.toFixed( 2 );
+			}
+			return '$' + formatted + unit;
+		}
+
 		const perMillion = price * 1000000;
 		const formatted =
 			perMillion >= 1
@@ -114,8 +142,8 @@
 				'</strong>' +
 				( nameDisplay
 					? '<span style="display:block;font-size:11px;color:#646970;margin-bottom:2px;">' +
-						escapeHtml( nameDisplay ) +
-						'</span>'
+					escapeHtml( nameDisplay ) +
+					'</span>'
 					: '' ) +
 				'<span style="font-size:11px;color:#50575e;">' +
 				escapeHtml( i18n.inPrice || 'Prompt:' ) +
@@ -129,8 +157,8 @@
 				'</strong>' +
 				( ctxText
 					? '&nbsp;&nbsp;<span style="color:#8c8f94;">' +
-						escapeHtml( ctxText ) +
-						'</span>'
+					escapeHtml( ctxText ) +
+					'</span>'
 					: '' ) +
 				'</span>';
 
@@ -171,6 +199,27 @@
 	}
 
 	/**
+	 * Formats a pricing dictionary key into a readable label.
+	 *
+	 * @param {string} key Raw pricing key.
+	 * @return {string} Beautified key.
+	 */
+	function formatPricingKey( key ) {
+		if ( key === 'prompt' ) {
+			return ( i18n.inPrice || 'Prompt:' ).replace( /:$/, '' );
+		}
+		if ( key === 'completion' ) {
+			return ( i18n.outPrice || 'Completion:' ).replace( /:$/, '' );
+		}
+		return key
+			.split( '_' )
+			.map( function( word ) {
+				return word.charAt( 0 ).toUpperCase() + word.slice( 1 );
+			} )
+			.join( ' ' );
+	}
+
+	/**
 	 * Renders a brief pricing / context summary below the input for the
 	 * currently selected model.
 	 *
@@ -184,30 +233,55 @@
 		}
 
 		const pricing = model.pricing || {};
-		const inputPrice = formatPrice( pricing.prompt );
-		const outputPrice = formatPrice( pricing.completion );
 		const ctxText =
 			model.context_length && typeof model.context_length === 'number'
 				? formatContext( model.context_length ) + ' ' + ( i18n.ctx || 'ctx' )
 				: '';
 
-		infoEl.innerHTML =
-			'<span style="color:#50575e;">' +
-			escapeHtml( i18n.inPrice || 'Prompt:' ) +
-			' <strong>' +
-			escapeHtml( inputPrice ) +
-			'</strong>' +
-			'&nbsp;&nbsp;' +
-			escapeHtml( i18n.outPrice || 'Completion:' ) +
-			' <strong>' +
-			escapeHtml( outputPrice ) +
-			'</strong>' +
-			( ctxText
-				? '&nbsp;&nbsp;<span style="color:#8c8f94;">' +
+		let pricingHtml = '';
+		const keys = [];
+
+		if ( pricing.prompt !== undefined ) {
+			keys.push( 'prompt' );
+		}
+		if ( pricing.completion !== undefined ) {
+			keys.push( 'completion' );
+		}
+
+		Object.keys( pricing ).forEach( function( key ) {
+			if ( key !== 'prompt' && key !== 'completion' ) {
+				keys.push( key );
+			}
+		} );
+
+		if ( keys.length > 0 ) {
+			pricingHtml = '<div style="margin-top:6px; display:flex; flex-wrap:wrap; gap:8px; font-size:11px; color:#646970;">';
+			keys.forEach( function( key ) {
+				const label = formatPricingKey( key );
+				const value = formatPrice( pricing[ key ], key );
+				pricingHtml +=
+					'<span style="background:#f0f0f1; padding:2px 6px; border-radius:3px; border:1px solid #dcdcde;">' +
+					escapeHtml( label ) +
+					': <strong>' +
+					escapeHtml( value ) +
+					'</strong></span>';
+			} );
+
+			if ( ctxText ) {
+				pricingHtml +=
+					'<span style="padding:2px 0; color:#8c8f94; font-size:11px; align-self:center; margin-left:4px;">' +
 					escapeHtml( ctxText ) +
-					'</span>'
-				: '' ) +
-			'</span>';
+					'</span>';
+			}
+			pricingHtml += '</div>';
+		} else if ( ctxText ) {
+			pricingHtml =
+				'<div style="margin-top:6px; font-size:11px; color:#8c8f94;">' +
+				escapeHtml( ctxText ) +
+				'</div>';
+		}
+
+		infoEl.innerHTML = pricingHtml;
 	}
 
 	/**
