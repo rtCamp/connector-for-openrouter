@@ -1,6 +1,15 @@
 {
 	"name": "connector-for-openrouter",
 	"private": true,
+	"files": [
+		"build",
+		"assets",
+		"languages",
+		"src",
+		"README.md",
+		"readme.txt",
+		"connector-for-openrouter.php"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/rtcamp/connector-for-openrouter.git"
@@ -29,7 +38,7 @@
 		"lint:php:stan": "composer run-script phpstan",
 		"lint:php": "composer run-script lint",
 		"lint": "npm-run-all --parallel lint:*",
-		"plugin-zip": "sh ./bin/plugin-zip.sh"
+		"plugin-zip": "wp-scripts plugin-zip"
 	},
 	"overrides": {
 		"eslint": "^8.57.1",
