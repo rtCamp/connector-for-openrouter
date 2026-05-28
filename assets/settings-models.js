@@ -1,6 +1,6 @@
 /** global ConnectorForOpenrouterSettings */
 
-( function() {
+(function () {
 	'use strict';
 
 	/** @type {Array} All models fetched from the server. */
@@ -14,30 +14,50 @@
 	const i18n = settings.i18n || {};
 
 	/**
-	 * Formats a per-token price string from OpenRouter into a human-readable
-	 * "$ X.XX /1M" label. Prices from the API are expressed as per-token values;
-	 * multiply by 1 000 000 to get the more intuitive per-million-token rate.
+	 * Formats a per-token or per-unit price string from OpenRouter into a human-readable
+	 * label. Prices for tokens are multiplied by 1,000,000 to express them per 1M tokens.
+	 * Prices for absolute units (like image or web search) are displayed directly.
 	 *
-	 * @param {string|undefined} priceStr Raw price value from the API (e.g. "0.000015").
+	 * @param {string|undefined} priceStr Raw price value from the API.
+	 * @param {string|undefined} key      The dictionary key of this price (e.g. 'image', 'web_search').
 	 * @return {string} Formatted price label.
 	 */
-	function formatPrice( priceStr ) {
-		if ( ! priceStr ) {
+	function formatPrice(priceStr, key) {
+		if (!priceStr) {
 			return i18n.na || 'N/A';
 		}
-		const price = parseFloat( priceStr );
-		if ( isNaN( price ) ) {
+		const price = parseFloat(priceStr);
+		if (isNaN(price)) {
 			return i18n.na || 'N/A';
 		}
-		if ( price === 0 ) {
+		if (price < 0) {
+			return 'Unavailable';
+		}
+		if (price === 0) {
 			return i18n.free || 'Free';
 		}
+
+		if (key === 'image' || key === 'web_search') {
+			const unit = key === 'image' ? ' / image' : ' / req';
+			let formatted = price.toFixed(8);
+			formatted = formatted.replace(/0+$/, '');
+			if (formatted.endsWith('.')) {
+				formatted = formatted + '00';
+			} else {
+				const parts = formatted.split('.');
+				if (parts[1] && parts[1].length === 1) {
+					formatted = formatted + '0';
+				}
+			}
+			return '$' + formatted + unit;
+		}
+
 		const perMillion = price * 1000000;
 		const formatted =
 			perMillion >= 1
-				? '$' + perMillion.toFixed( 2 )
-				: '$' + perMillion.toPrecision( 3 );
-		return formatted + ( i18n.perMillion || '/1M' );
+				? '$' + perMillion.toFixed(2)
+				: '$' + perMillion.toPrecision(3);
+		return formatted + (i18n.perMillion || '/1M');
 	}
 
 	/**
@@ -46,7 +66,7 @@
 	 * @param {number} n Context length value.
 	 * @return {string} Formatted string (e.g. "128,000").
 	 */
-	function formatContext( n ) {
+	function formatContext(n) {
 		return n.toLocaleString();
 	}
 
@@ -58,13 +78,13 @@
 	 * @param {string} str Raw string.
 	 * @return {string} HTML-escaped string.
 	 */
-	function escapeHtml( str ) {
+	function escapeHtml(str) {
 		return str
-			.replace( /&/g, '&amp;' )
-			.replace( /</g, '&lt;' )
-			.replace( />/g, '&gt;' )
-			.replace( /"/g, '&quot;' )
-			.replace( /'/g, '&#39;' );
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;');
 	}
 
 	/**
@@ -79,75 +99,75 @@
 	 * @param {Element} hiddenInput Hidden input element that holds the saved value.
 	 * @param {Element} infoEl      Element that shows the selected model pricing.
 	 */
-	function renderDropdown( matches, dropdown, searchInput, hiddenInput, infoEl ) {
+	function renderDropdown(matches, dropdown, searchInput, hiddenInput, infoEl) {
 		dropdown.innerHTML = '';
 
-		if ( matches.length === 0 ) {
+		if (matches.length === 0) {
 			dropdown.style.display = 'none';
 			return;
 		}
 
-		matches.forEach( function( model ) {
+		matches.forEach(function (model) {
 			const modelId = typeof model.id === 'string' ? model.id : '';
-			if ( ! modelId ) {
+			if (!modelId) {
 				return;
 			}
 
 			const pricing = model.pricing || {};
-			const inputPrice = formatPrice( pricing.prompt );
-			const outputPrice = formatPrice( pricing.completion );
+			const inputPrice = formatPrice(pricing.prompt);
+			const outputPrice = formatPrice(pricing.completion);
 			const ctxText =
 				model.context_length && typeof model.context_length === 'number'
-					? formatContext( model.context_length ) + ' ' + ( i18n.ctx || 'ctx' )
+					? formatContext(model.context_length) + ' ' + (i18n.ctx || 'ctx')
 					: '';
 			const nameDisplay =
 				model.name && model.name !== modelId ? model.name : '';
 
-			const item = document.createElement( 'div' );
-			item.setAttribute( 'role', 'option' );
+			const item = document.createElement('div');
+			item.setAttribute('role', 'option');
 			item.style.cssText =
 				'padding:8px 12px; cursor:pointer; border-bottom:1px solid #f0f0f1;' +
 				'transition:background .1s;';
 			item.innerHTML =
 				'<strong style="display:block;font-size:13px;line-height:1.4;">' +
-				escapeHtml( modelId ) +
+				escapeHtml(modelId) +
 				'</strong>' +
-				( nameDisplay
+				(nameDisplay
 					? '<span style="display:block;font-size:11px;color:#646970;margin-bottom:2px;">' +
-						escapeHtml( nameDisplay ) +
-						'</span>'
-					: '' ) +
+					escapeHtml(nameDisplay) +
+					'</span>'
+					: '') +
 				'<span style="font-size:11px;color:#50575e;">' +
-				escapeHtml( i18n.inPrice || 'Prompt:' ) +
+				escapeHtml(i18n.inPrice || 'Prompt:') +
 				' <strong>' +
-				escapeHtml( inputPrice ) +
+				escapeHtml(inputPrice) +
 				'</strong>' +
 				'&nbsp;&nbsp;' +
-				escapeHtml( i18n.outPrice || 'Completion:' ) +
+				escapeHtml(i18n.outPrice || 'Completion:') +
 				' <strong>' +
-				escapeHtml( outputPrice ) +
+				escapeHtml(outputPrice) +
 				'</strong>' +
-				( ctxText
+				(ctxText
 					? '&nbsp;&nbsp;<span style="color:#8c8f94;">' +
-						escapeHtml( ctxText ) +
-						'</span>'
-					: '' ) +
+					escapeHtml(ctxText) +
+					'</span>'
+					: '') +
 				'</span>';
 
-			item.addEventListener( 'mouseenter', function() {
+			item.addEventListener('mouseenter', function () {
 				item.style.background = '#f6f7f7';
-			} );
-			item.addEventListener( 'mouseleave', function() {
+			});
+			item.addEventListener('mouseleave', function () {
 				item.style.background = '';
-			} );
-			item.addEventListener( 'mousedown', function( e ) {
+			});
+			item.addEventListener('mousedown', function (e) {
 				// Prevent blur from firing on the text input before click.
 				e.preventDefault();
-				selectModel( model, searchInput, hiddenInput, dropdown, infoEl );
-			} );
+				selectModel(model, searchInput, hiddenInput, dropdown, infoEl);
+			});
 
-			dropdown.appendChild( item );
-		} );
+			dropdown.appendChild(item);
+		});
 
 		dropdown.style.display = 'block';
 	}
@@ -162,12 +182,33 @@
 	 * @param {Element} dropdown    Dropdown container.
 	 * @param {Element} infoEl      Element that shows selected-model pricing.
 	 */
-	function selectModel( model, searchInput, hiddenInput, dropdown, infoEl ) {
+	function selectModel(model, searchInput, hiddenInput, dropdown, infoEl) {
 		const modelId = typeof model.id === 'string' ? model.id : '';
 		searchInput.value = modelId;
 		hiddenInput.value = modelId;
 		dropdown.style.display = 'none';
-		renderModelInfo( model, infoEl );
+		renderModelInfo(model, infoEl);
+	}
+
+	/**
+	 * Formats a pricing dictionary key into a readable label.
+	 *
+	 * @param {string} key Raw pricing key.
+	 * @return {string} Beautified key.
+	 */
+	function formatPricingKey(key) {
+		if (key === 'prompt') {
+			return (i18n.inPrice || 'Prompt:').replace(/:$/, '');
+		}
+		if (key === 'completion') {
+			return (i18n.outPrice || 'Completion:').replace(/:$/, '');
+		}
+		return key
+			.split('_')
+			.map(function (word) {
+				return word.charAt(0).toUpperCase() + word.slice(1);
+			})
+			.join(' ');
 	}
 
 	/**
@@ -177,37 +218,62 @@
 	 * @param {Object|null} model  The model object, or null to clear the info.
 	 * @param {Element}     infoEl Container element.
 	 */
-	function renderModelInfo( model, infoEl ) {
-		if ( ! model ) {
+	function renderModelInfo(model, infoEl) {
+		if (!model) {
 			infoEl.innerHTML = '';
 			return;
 		}
 
 		const pricing = model.pricing || {};
-		const inputPrice = formatPrice( pricing.prompt );
-		const outputPrice = formatPrice( pricing.completion );
 		const ctxText =
 			model.context_length && typeof model.context_length === 'number'
-				? formatContext( model.context_length ) + ' ' + ( i18n.ctx || 'ctx' )
+				? formatContext(model.context_length) + ' ' + (i18n.ctx || 'ctx')
 				: '';
 
-		infoEl.innerHTML =
-			'<span style="color:#50575e;">' +
-			escapeHtml( i18n.inPrice || 'Prompt:' ) +
-			' <strong>' +
-			escapeHtml( inputPrice ) +
-			'</strong>' +
-			'&nbsp;&nbsp;' +
-			escapeHtml( i18n.outPrice || 'Completion:' ) +
-			' <strong>' +
-			escapeHtml( outputPrice ) +
-			'</strong>' +
-			( ctxText
-				? '&nbsp;&nbsp;<span style="color:#8c8f94;">' +
-					escapeHtml( ctxText ) +
-					'</span>'
-				: '' ) +
-			'</span>';
+		let pricingHtml = '';
+		const keys = [];
+
+		if (pricing.prompt !== undefined) {
+			keys.push('prompt');
+		}
+		if (pricing.completion !== undefined) {
+			keys.push('completion');
+		}
+
+		Object.keys(pricing).forEach(function (key) {
+			if (key !== 'prompt' && key !== 'completion') {
+				keys.push(key);
+			}
+		});
+
+		if (keys.length > 0) {
+			pricingHtml = '<div style="margin-top:6px; display:flex; flex-wrap:wrap; gap:8px; font-size:11px; color:#646970;">';
+			keys.forEach(function (key) {
+				const label = formatPricingKey(key);
+				const value = formatPrice(pricing[key], key);
+				pricingHtml +=
+					'<span style="background:#f0f0f1; padding:2px 6px; border-radius:3px; border:1px solid #dcdcde;">' +
+					escapeHtml(label) +
+					': <strong>' +
+					escapeHtml(value) +
+					'</strong></span>';
+			});
+
+			if (ctxText) {
+				pricingHtml +=
+					'<span style="padding:2px 0; color:#8c8f94; font-size:11px; align-self:center; margin-left:4px;">' +
+					escapeHtml(ctxText) +
+					'</span>';
+			}
+			pricingHtml += '</div>';
+		} else if (ctxText) {
+			pricingHtml =
+				'<div style="margin-top:6px; font-size:11px; color:#8c8f94;">' +
+				escapeHtml(ctxText) +
+				'</div>';
+		}
+
+		infoEl.innerHTML = pricingHtml;
 	}
 
 	/**
@@ -219,20 +285,20 @@
 	 * @param {Element} hiddenInput Hidden input element.
 	 * @param {Element} infoEl      Pricing info element.
 	 */
-	function filterModels( query, dropdown, searchInput, hiddenInput, infoEl ) {
+	function filterModels(query, dropdown, searchInput, hiddenInput, infoEl) {
 		const matches = allModels
-			.filter( function( model ) {
+			.filter(function (model) {
 				const id =
 					typeof model.id === 'string' ? model.id.toLowerCase() : '';
 				const name =
 					typeof model.name === 'string'
 						? model.name.toLowerCase()
 						: '';
-				return id.indexOf( query ) !== -1 || name.indexOf( query ) !== -1;
-			} )
-			.slice( 0, 5 );
+				return id.indexOf(query) !== -1 || name.indexOf(query) !== -1;
+			})
+			.slice(0, 5);
 
-		renderDropdown( matches, dropdown, searchInput, hiddenInput, infoEl );
+		renderDropdown(matches, dropdown, searchInput, hiddenInput, infoEl);
 	}
 
 	/**
@@ -241,18 +307,18 @@
 	 * @param {string} query Search term (lower-case).
 	 * @return {Array} Image-capable models.
 	 */
-	function getImageModelMatches( query ) {
+	function getImageModelMatches(query) {
 		const imageModels = allImageModels;
 
-		if ( ! query ) {
+		if (!query) {
 			return imageModels;
 		}
 
-		return imageModels.filter( function( model ) {
+		return imageModels.filter(function (model) {
 			const id = typeof model.id === 'string' ? model.id.toLowerCase() : '';
 			const name = typeof model.name === 'string' ? model.name.toLowerCase() : '';
-			return id.indexOf( query ) !== -1 || name.indexOf( query ) !== -1;
-		} );
+			return id.indexOf(query) !== -1 || name.indexOf(query) !== -1;
+		});
 	}
 
 	/**
@@ -264,65 +330,65 @@
 	 * @param {Element} imageHiddenInput Hidden input for saved image model value.
 	 * @param {Element} imageInfoEl      Element showing selected model info.
 	 */
-	function renderImageDropdown( matches, dropdown, imageSearchInput, imageHiddenInput, imageInfoEl ) {
+	function renderImageDropdown(matches, dropdown, imageSearchInput, imageHiddenInput, imageInfoEl) {
 		dropdown.innerHTML = '';
 
-		if ( matches.length === 0 ) {
+		if (matches.length === 0) {
 			dropdown.style.display = 'none';
 			return;
 		}
 
-		matches.forEach( function( model ) {
+		matches.forEach(function (model) {
 			const modelId = typeof model.id === 'string' ? model.id : '';
-			if ( ! modelId ) {
+			if (!modelId) {
 				return;
 			}
 
 			const pricing = model.pricing || {};
-			const inputPrice = formatPrice( pricing.prompt );
-			const outputPrice = formatPrice( pricing.completion );
+			const inputPrice = formatPrice(pricing.prompt);
+			const outputPrice = formatPrice(pricing.completion);
 			const ctxText =
 				model.context_length && typeof model.context_length === 'number'
-					? formatContext( model.context_length ) + ' ' + ( i18n.ctx || 'ctx' )
+					? formatContext(model.context_length) + ' ' + (i18n.ctx || 'ctx')
 					: '';
 
-			const item = document.createElement( 'div' );
-			item.setAttribute( 'role', 'option' );
+			const item = document.createElement('div');
+			item.setAttribute('role', 'option');
 			item.style.cssText =
 				'padding:8px 12px; cursor:pointer; border-bottom:1px solid #f0f0f1;' +
 				'transition:background .1s;';
 			item.innerHTML =
 				'<strong style="display:block;font-size:13px;line-height:1.4;">' +
-				escapeHtml( modelId ) +
+				escapeHtml(modelId) +
 				'</strong>' +
 				'<span style="font-size:11px;color:#50575e;">' +
-				escapeHtml( i18n.inPrice || 'Prompt:' ) +
+				escapeHtml(i18n.inPrice || 'Prompt:') +
 				' <strong>' +
-				escapeHtml( inputPrice ) +
+				escapeHtml(inputPrice) +
 				'</strong>' +
 				'&nbsp;&nbsp;' +
-				escapeHtml( i18n.outPrice || 'Completion:' ) +
+				escapeHtml(i18n.outPrice || 'Completion:') +
 				' <strong>' +
-				escapeHtml( outputPrice ) +
+				escapeHtml(outputPrice) +
 				'</strong>' +
-				( ctxText
-					? '&nbsp;&nbsp;<span style="color:#8c8f94;">' + escapeHtml( ctxText ) + '</span>'
-					: '' ) +
+				(ctxText
+					? '&nbsp;&nbsp;<span style="color:#8c8f94;">' + escapeHtml(ctxText) + '</span>'
+					: '') +
 				'</span>';
 
-			item.addEventListener( 'mouseenter', function() {
+			item.addEventListener('mouseenter', function () {
 				item.style.background = '#f6f7f7';
-			} );
-			item.addEventListener( 'mouseleave', function() {
+			});
+			item.addEventListener('mouseleave', function () {
 				item.style.background = '';
-			} );
-			item.addEventListener( 'mousedown', function( e ) {
+			});
+			item.addEventListener('mousedown', function (e) {
 				e.preventDefault();
-				selectModel( model, imageSearchInput, imageHiddenInput, dropdown, imageInfoEl );
-			} );
+				selectModel(model, imageSearchInput, imageHiddenInput, dropdown, imageInfoEl);
+			});
 
-			dropdown.appendChild( item );
-		} );
+			dropdown.appendChild(item);
+		});
 
 		dropdown.style.display = 'block';
 	}
@@ -336,9 +402,9 @@
 	 * @param {Element} imageHiddenInput Hidden input for saved image model value.
 	 * @param {Element} imageInfoEl      Element showing selected model info.
 	 */
-	function filterImageModels( query, dropdown, imageSearchInput, imageHiddenInput, imageInfoEl ) {
+	function filterImageModels(query, dropdown, imageSearchInput, imageHiddenInput, imageInfoEl) {
 		renderImageDropdown(
-			getImageModelMatches( query ),
+			getImageModelMatches(query),
 			dropdown,
 			imageSearchInput,
 			imageHiddenInput,
@@ -355,21 +421,21 @@
 	 * @param {Element} statusEl   Status text element.
 	 * @param {Element} infoEl     Pricing info element.
 	 */
-	function loadModels( ajaxUrl, savedModel, statusEl, infoEl ) {
+	function loadModels(ajaxUrl, savedModel, statusEl, infoEl) {
 		statusEl.textContent = i18n.loading || 'Loading models…';
 		statusEl.style.color = '#50575e';
 
 		window
-			.fetch( ajaxUrl, { credentials: 'same-origin' } )
-			.then( function( res ) {
+			.fetch(ajaxUrl, { credentials: 'same-origin' })
+			.then(function (res) {
 				return res.json();
-			} )
-			.then( function( data ) {
-				if ( ! data.success || ! Array.isArray( data.data ) ) {
+			})
+			.then(function (data) {
+				if (!data.success || !Array.isArray(data.data)) {
 					statusEl.textContent =
-						( data.data && typeof data.data === 'string'
+						(data.data && typeof data.data === 'string'
 							? data.data
-							: null ) ||
+							: null) ||
 						i18n.errorLoad ||
 						'Could not load models.';
 					statusEl.style.color = '#d63638';
@@ -380,25 +446,25 @@
 				isLoaded = true;
 
 				statusEl.textContent =
-					allModels.length + ( i18n.modelsCount || ' models available.' );
+					allModels.length + (i18n.modelsCount || ' models available.');
 				statusEl.style.color = '#50575e';
 
 				// Show info for the initially saved model.
-				if ( savedModel ) {
+				if (savedModel) {
 					let found = null;
-					for ( let idx = 0; idx < allModels.length; idx++ ) {
-						if ( allModels[ idx ].id === savedModel ) {
-							found = allModels[ idx ];
+					for (let idx = 0; idx < allModels.length; idx++) {
+						if (allModels[idx].id === savedModel) {
+							found = allModels[idx];
 							break;
 						}
 					}
-					renderModelInfo( found, infoEl );
+					renderModelInfo(found, infoEl);
 				}
-			} )
-			.catch( function() {
+			})
+			.catch(function () {
 				statusEl.textContent = i18n.errorLoad || 'Could not load models.';
 				statusEl.style.color = '#d63638';
-			} );
+			});
 	}
 
 	/**
@@ -409,21 +475,21 @@
 	 * @param {Element} imageStatusEl   Image status text element.
 	 * @param {Element} imageInfoEl     Image pricing info element.
 	 */
-	function loadImageModels( imageAjaxUrl, savedImageModel, imageStatusEl, imageInfoEl ) {
+	function loadImageModels(imageAjaxUrl, savedImageModel, imageStatusEl, imageInfoEl) {
 		imageStatusEl.textContent = i18n.loading || 'Loading models…';
 		imageStatusEl.style.color = '#50575e';
 
 		window
-			.fetch( imageAjaxUrl, { credentials: 'same-origin' } )
-			.then( function( res ) {
+			.fetch(imageAjaxUrl, { credentials: 'same-origin' })
+			.then(function (res) {
 				return res.json();
-			} )
-			.then( function( data ) {
-				if ( ! data.success || ! Array.isArray( data.data ) ) {
+			})
+			.then(function (data) {
+				if (!data.success || !Array.isArray(data.data)) {
 					imageStatusEl.textContent =
-						( data.data && typeof data.data === 'string'
+						(data.data && typeof data.data === 'string'
 							? data.data
-							: null ) ||
+							: null) ||
 						i18n.errorLoad ||
 						'Could not load models.';
 					imageStatusEl.style.color = '#d63638';
@@ -436,17 +502,17 @@
 				imageStatusEl.textContent = allImageModels.length + ' image models available.';
 				imageStatusEl.style.color = '#50575e';
 
-				if ( savedImageModel ) {
-					const selectedImageModelData = getImageModelMatches( '' ).find( function( model ) {
+				if (savedImageModel) {
+					const selectedImageModelData = getImageModelMatches('').find(function (model) {
 						return model.id === savedImageModel;
-					} ) || null;
-					renderModelInfo( selectedImageModelData, imageInfoEl );
+					}) || null;
+					renderModelInfo(selectedImageModelData, imageInfoEl);
 				}
-			} )
-			.catch( function() {
+			})
+			.catch(function () {
 				imageStatusEl.textContent = i18n.errorLoad || 'Could not load models.';
 				imageStatusEl.style.color = '#d63638';
-			} );
+			});
 	}
 
 	/**
@@ -459,20 +525,20 @@
 		const hiddenInput = document.getElementById(
 			'connector_for_openrouter_settings-model-value',
 		);
-		const dropdown = document.getElementById( 'openrouter-model-dropdown' );
-		const infoEl = document.getElementById( 'openrouter-model-info' );
-		const statusEl = document.getElementById( 'openrouter-model-status' );
+		const dropdown = document.getElementById('openrouter-model-dropdown');
+		const infoEl = document.getElementById('openrouter-model-info');
+		const statusEl = document.getElementById('openrouter-model-status');
 		const imageSearchInput = document.getElementById(
 			'connector_for_openrouter_settings-image-model-search',
 		);
 		const imageHiddenInput = document.getElementById(
 			'connector_for_openrouter_settings-image-model-value',
 		);
-		const imageDropdown = document.getElementById( 'openrouter-image-model-dropdown' );
-		const imageInfoEl = document.getElementById( 'openrouter-image-model-info' );
-		const imageStatusEl = document.getElementById( 'openrouter-image-model-status' );
+		const imageDropdown = document.getElementById('openrouter-image-model-dropdown');
+		const imageInfoEl = document.getElementById('openrouter-image-model-info');
+		const imageStatusEl = document.getElementById('openrouter-image-model-status');
 
-		if ( ! searchInput || ! hiddenInput || ! dropdown || ! infoEl || ! statusEl || ! imageSearchInput || ! imageHiddenInput || ! imageDropdown || ! imageInfoEl || ! imageStatusEl ) {
+		if (!searchInput || !hiddenInput || !dropdown || !infoEl || !statusEl || !imageSearchInput || !imageHiddenInput || !imageDropdown || !imageInfoEl || !imageStatusEl) {
 			return;
 		}
 
@@ -483,93 +549,93 @@
 		imageStatusEl.style.color = '#50575e';
 
 		// Load models in background.
-		loadModels( ajaxUrl, savedModel, statusEl, infoEl );
-		loadImageModels( imageAjaxUrl, savedImageModel, imageStatusEl, imageInfoEl );
+		loadModels(ajaxUrl, savedModel, statusEl, infoEl);
+		loadImageModels(imageAjaxUrl, savedImageModel, imageStatusEl, imageInfoEl);
 
 		// Filter on input.
-		searchInput.addEventListener( 'input', function() {
+		searchInput.addEventListener('input', function () {
 			hiddenInput.value = this.value.trim();
 
-			if ( ! isLoaded ) {
+			if (!isLoaded) {
 				return;
 			}
 
 			const query = this.value.trim().toLowerCase();
 
-			if ( query.length < 3 ) {
+			if (query.length < 3) {
 				dropdown.style.display = 'none';
 				return;
 			}
 
-			filterModels( query, dropdown, searchInput, hiddenInput, infoEl );
-		} );
+			filterModels(query, dropdown, searchInput, hiddenInput, infoEl);
+		});
 
 		// Close dropdown on blur.
-		searchInput.addEventListener( 'blur', function() {
+		searchInput.addEventListener('blur', function () {
 			// Small delay so mousedown on an item fires first.
-			setTimeout( function() {
+			setTimeout(function () {
 				dropdown.style.display = 'none';
-			}, 150 );
-		} );
+			}, 150);
+		});
 
 		// Re-open if user focuses and already has 3+ chars.
-		searchInput.addEventListener( 'focus', function() {
-			if ( ! isLoaded ) {
+		searchInput.addEventListener('focus', function () {
+			if (!isLoaded) {
 				return;
 			}
 
 			const query = this.value.trim().toLowerCase();
-			if ( query.length >= 3 ) {
-				filterModels( query, dropdown, searchInput, hiddenInput, infoEl );
+			if (query.length >= 3) {
+				filterModels(query, dropdown, searchInput, hiddenInput, infoEl);
 			}
-		} );
+		});
 
 		// Keyboard navigation: Escape closes the dropdown.
-		searchInput.addEventListener( 'keydown', function( e ) {
-			if ( e.key === 'Escape' ) {
+		searchInput.addEventListener('keydown', function (e) {
+			if (e.key === 'Escape') {
 				dropdown.style.display = 'none';
 			}
-		} );
+		});
 
 		// Image model autocomplete: show all image models on focus, filter while typing.
-		imageSearchInput.addEventListener( 'input', function() {
+		imageSearchInput.addEventListener('input', function () {
 			imageHiddenInput.value = this.value.trim();
 
-			if ( ! isImageLoaded ) {
+			if (!isImageLoaded) {
 				return;
 			}
 
 			const query = this.value.trim().toLowerCase();
 
-			filterImageModels( query, imageDropdown, imageSearchInput, imageHiddenInput, imageInfoEl );
-		} );
+			filterImageModels(query, imageDropdown, imageSearchInput, imageHiddenInput, imageInfoEl);
+		});
 
-		imageSearchInput.addEventListener( 'focus', function() {
-			if ( ! isImageLoaded ) {
+		imageSearchInput.addEventListener('focus', function () {
+			if (!isImageLoaded) {
 				imageStatusEl.textContent = i18n.loading || 'Loading models…';
 				return;
 			}
 
-			imageStatusEl.textContent = getImageModelMatches( '' ).length + ' image models available.';
-			filterImageModels( this.value.trim().toLowerCase(), imageDropdown, imageSearchInput, imageHiddenInput, imageInfoEl );
-		} );
+			imageStatusEl.textContent = getImageModelMatches('').length + ' image models available.';
+			filterImageModels(this.value.trim().toLowerCase(), imageDropdown, imageSearchInput, imageHiddenInput, imageInfoEl);
+		});
 
-		imageSearchInput.addEventListener( 'blur', function() {
-			setTimeout( function() {
+		imageSearchInput.addEventListener('blur', function () {
+			setTimeout(function () {
 				imageDropdown.style.display = 'none';
-			}, 150 );
-		} );
+			}, 150);
+		});
 
-		imageSearchInput.addEventListener( 'keydown', function( e ) {
-			if ( e.key === 'Escape' ) {
+		imageSearchInput.addEventListener('keydown', function (e) {
+			if (e.key === 'Escape') {
 				imageDropdown.style.display = 'none';
 			}
-		} );
+		});
 	}
 
-	if ( document.readyState === 'loading' ) {
-		document.addEventListener( 'DOMContentLoaded', init );
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', init);
 	} else {
 		init();
 	}
-}() );
+}());
