@@ -143,67 +143,7 @@ class OpenRouterSettings {
 		}
 		?>
 
-		<style>
-			.openrouter-tooltip-wrapper {
-				position: relative;
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				width: 16px;
-				height: 16px;
-				vertical-align: middle;
-				margin-left: 8px;
-			}
-			.openrouter-tooltip-wrapper .openrouter-tooltip-text {
-				visibility: hidden;
-				width: 280px;
-				background: rgba(30, 41, 59, 0.96);
-				color: #ffffff;
-				text-align: left;
-				border-radius: 6px;
-				padding: 10px 14px;
-				position: absolute;
-				z-index: 10000;
-				bottom: 130%;
-				left: 50%;
-				margin-left: -155px;
-				opacity: 0;
-				transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-				transform: translateY(6px);
-				font-size: 11px;
-				line-height: 1.5;
-				box-shadow: 0 4px 18px rgba(15, 23, 42, 0.25);
-				pointer-events: none;
-				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-				font-weight: normal;
-				white-space: normal;
-			}
-			.openrouter-tooltip-wrapper .openrouter-tooltip-text::after {
-				content: "";
-				position: absolute;
-				top: 100%;
-				left: 50%;
-				margin-left: -6px;
-				border-width: 6px;
-				border-style: solid;
-				border-color: rgba(30, 41, 59, 0.96) transparent transparent transparent;
-			}
-			.openrouter-tooltip-wrapper:hover .openrouter-tooltip-text,
-			.openrouter-tooltip-wrapper:focus .openrouter-tooltip-text,
-			.openrouter-tooltip-wrapper:focus-within .openrouter-tooltip-text {
-				visibility: visible;
-				opacity: 1;
-				transform: translateY(0);
-			}
-			.openrouter-tooltip-wrapper:focus {
-				outline: none;
-			}
-			.openrouter-tooltip-wrapper:focus .dashicons {
-				color: #2271b1;
-			}
-		</style>
-
-		<div class="wrap" style="max-width: 50rem;">
+		<div class="wrap openrouter-settings-wrap">
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 			<p>
 				<?php
@@ -255,7 +195,7 @@ class OpenRouterSettings {
 		$hidden_name   = self::OPTION_NAME . '[' . self::KEY_MODEL . ']';
 		?>
 
-		<div id="openrouter-model-container" style="position:relative; display:inline-block; min-width:22rem;">
+		<div id="openrouter-model-container" class="openrouter-field-container">
 			<input
 				type="text"
 				id="<?php echo esc_attr( $input_id ); ?>"
@@ -274,16 +214,16 @@ class OpenRouterSettings {
 			<div
 				id="openrouter-model-dropdown"
 				role="listbox"
-				style="display:none; position:absolute; top:100%; left:0; right:0; background:#fff; border:1px solid #8c8f94; border-top:none; border-radius:0 0 4px 4px; box-shadow:0 4px 8px rgba(0,0,0,.1); z-index:9999; max-height:320px; overflow-y:auto;"
+				class="openrouter-dropdown"
 			></div>
 		</div>
 
 		<span class="openrouter-tooltip-wrapper" tabindex="0" aria-describedby="openrouter-model-tooltip-desc" aria-label="<?php esc_attr_e( 'Model help description', 'connector-for-openrouter' ); ?>">
-			<span class="dashicons dashicons-editor-help" style="font-size: 16px; width: 16px; height: 16px; color: #8c8f94; cursor: help; vertical-align: middle;"></span>
+			<span class="dashicons dashicons-editor-help"></span>
 			<span id="openrouter-model-tooltip-desc" role="tooltip" class="openrouter-tooltip-text"><?php esc_html_e( 'Choose a default OpenRouter model override. Leave empty to use the model requested by AI Client.', 'connector-for-openrouter' ); ?></span>
 		</span>
-		<span id="openrouter-model-status" style="margin-left:8px; font-size:12px; vertical-align:middle;"></span>
-		<div id="openrouter-model-info" style="margin-top:6px; font-size:12px; color:#50575e;"></div>
+		<span id="openrouter-model-status" class="openrouter-status"></span>
+		<div id="openrouter-model-info" class="openrouter-info"></div>
 
 		<?php
 	}
@@ -301,7 +241,7 @@ class OpenRouterSettings {
 		$hidden_name         = self::OPTION_NAME . '[' . self::KEY_IMAGE_MODEL . ']';
 		?>
 
-		<div id="openrouter-image-model-container" style="position:relative; display:inline-block; min-width:22rem;">
+		<div id="openrouter-image-model-container" class="openrouter-field-container">
 			<input
 				type="text"
 				id="<?php echo esc_attr( $input_id ); ?>"
@@ -320,20 +260,20 @@ class OpenRouterSettings {
 			<div
 				id="openrouter-image-model-dropdown"
 				role="listbox"
-				style="display:none; position:absolute; top:100%; left:0; right:0; background:#fff; border:1px solid #8c8f94; border-top:none; border-radius:0 0 4px 4px; box-shadow:0 4px 8px rgba(0,0,0,.1); z-index:9999; max-height:320px; overflow-y:auto;"
+				class="openrouter-dropdown"
 			></div>
 		</div>
 
 		<span class="openrouter-tooltip-wrapper" tabindex="0" aria-describedby="openrouter-image-model-tooltip-desc" aria-label="<?php esc_attr_e( 'Image model help description', 'connector-for-openrouter' ); ?>">
-			<span class="dashicons dashicons-editor-help" style="font-size: 16px; width: 16px; height: 16px; color: #8c8f94; cursor: help; vertical-align: middle;"></span>
+			<span class="dashicons dashicons-editor-help"></span>
 			<span id="openrouter-image-model-tooltip-desc" role="tooltip" class="openrouter-tooltip-text"><?php esc_html_e( 'Choose a dedicated image generation model. This autocomplete lists all OpenRouter models that support image output.', 'connector-for-openrouter' ); ?></span>
 		</span>
-		<span id="openrouter-image-model-status" style="margin-left:8px; font-size:12px; vertical-align:middle;"></span>
-		<div id="openrouter-image-model-info" style="margin-top:6px; font-size:12px; color:#50575e;"></div>
+		<span id="openrouter-image-model-status" class="openrouter-status"></span>
+		<div id="openrouter-image-model-info" class="openrouter-info"></div>
 
 		<hr />
 
-		<p class="description" style="font-style:italic;">
+		<p class="description openrouter-description-italic">
 			<?php esc_html_e( 'Suggestions show input price, output price (per 1M tokens), and context length. Be aware that pricing for some models is based on average text and image output, which isn\'t listed here. Please verify the exact pricing at openrouter.ai/models.', 'connector-for-openrouter' ); ?>
 		</p>
 
@@ -352,13 +292,28 @@ class OpenRouterSettings {
 			return;
 		}
 
+		$plugin_dir = CONNECTOR_FOR_OPENROUTER_PLUGIN_DIR;
+		$asset_file = $plugin_dir . 'build/admin/settings.asset.php';
+		$asset      = file_exists( $asset_file ) ? require $asset_file : []; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable -- Asset file path is built from a known constant.
+
+		$dependencies = isset( $asset['dependencies'] ) ? $asset['dependencies'] : [];
+		$version      = isset( $asset['version'] ) ? $asset['version'] : false;
+
 		wp_enqueue_script(
 			'connector-for-openrouter-settings',
-			plugins_url( 'assets/settings-models.js', CONNECTOR_FOR_OPENROUTER_PLUGIN_FILE ),
-			[],
-			'1.0.0',
+			plugins_url( 'build/admin/settings.js', CONNECTOR_FOR_OPENROUTER_PLUGIN_FILE ),
+			$dependencies,
+			$version,
 			true
 		);
+
+		wp_enqueue_style(
+			'connector-for-openrouter-settings',
+			plugins_url( 'build/admin/style-settings.css', CONNECTOR_FOR_OPENROUTER_PLUGIN_FILE ),
+			[],
+			$version
+		);
+		wp_style_add_data( 'connector-for-openrouter-settings', 'rtl', 'replace' );
 
 		wp_localize_script(
 			'connector-for-openrouter-settings',

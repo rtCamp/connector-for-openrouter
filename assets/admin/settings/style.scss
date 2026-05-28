@@ -1,0 +1,191 @@
+// OpenRouter Settings Page Styles
+
+// Tooltip wrapper and inner text
+.openrouter-tooltip-wrapper {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+	margin-left: 8px;
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+		color: #8c8f94;
+		cursor: help;
+		vertical-align: middle;
+	}
+
+	&:focus {
+		outline: none;
+
+		.dashicons {
+			color: #2271b1;
+		}
+	}
+
+	.openrouter-tooltip-text {
+		visibility: hidden;
+		width: 280px;
+		background: rgba(30, 41, 59, 0.96);
+		color: #fff;
+		text-align: left;
+		border-radius: 6px;
+		padding: 10px 14px;
+		position: absolute;
+		z-index: 10000;
+		bottom: 130%;
+		left: 50%;
+		margin-left: -155px;
+		opacity: 0;
+		transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+		transform: translateY(6px);
+		font-size: 11px;
+		line-height: 1.5;
+		box-shadow: 0 4px 18px rgba(15, 23, 42, 0.25);
+		pointer-events: none;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+		font-weight: 400;
+		white-space: normal;
+
+		&::after {
+			content: "";
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			margin-left: -6px;
+			border-width: 6px;
+			border-style: solid;
+			border-color: rgba(30, 41, 59, 0.96) transparent transparent transparent;
+		}
+	}
+
+	&:hover,
+	&:focus,
+	&:focus-within {
+
+		.openrouter-tooltip-text {
+			visibility: visible;
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+}
+
+// Layout wrapper for OpenRouter settings screen
+.openrouter-settings-wrap {
+	max-width: 50rem;
+}
+
+// Container for each model field autocomplete
+.openrouter-field-container {
+	position: relative;
+	display: inline-block;
+	min-width: 22rem;
+}
+
+// Autocomplete suggestions dropdown menu
+.openrouter-dropdown {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	background: #fff;
+	border: 1px solid #8c8f94;
+	border-top: none;
+	border-radius: 0 0 4px 4px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	z-index: 9999;
+	max-height: 320px;
+	overflow-y: auto;
+}
+
+// Status text next to inputs
+.openrouter-status {
+	margin-left: 8px;
+	font-size: 12px;
+	vertical-align: middle;
+	color: #50575e;
+}
+
+// Description text style for spacing below field
+.openrouter-info {
+	margin-top: 6px;
+	font-size: 12px;
+	color: #50575e;
+}
+
+// Italicized warning or notes text
+.openrouter-description-italic {
+	font-style: italic;
+}
+
+// Autocomplete individual item
+.openrouter-dropdown-item {
+	padding: 8px 12px;
+	cursor: pointer;
+	border-bottom: 1px solid #f0f0f1;
+	transition: background 0.1s;
+
+	&:hover {
+		background: #f6f7f7;
+	}
+
+	.openrouter-dropdown-item-id {
+		display: block;
+		font-size: 13px;
+		line-height: 1.4;
+	}
+
+	.openrouter-dropdown-item-name {
+		display: block;
+		font-size: 11px;
+		color: #646970;
+		margin-bottom: 2px;
+	}
+
+	.openrouter-dropdown-item-meta {
+		font-size: 11px;
+		color: #50575e;
+	}
+
+	.openrouter-dropdown-item-ctx {
+		color: #8c8f94;
+	}
+}
+
+// Info and pricing display below chosen model input
+.openrouter-info-flex {
+	margin-top: 6px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	font-size: 11px;
+	color: #646970;
+}
+
+.openrouter-info-badge {
+	background: #f0f0f1;
+	padding: 2px 6px;
+	border-radius: 3px;
+	border: 1px solid #dcdcde;
+}
+
+.openrouter-info-ctx {
+	padding: 2px 0;
+	color: #8c8f94;
+	font-size: 11px;
+	align-self: center;
+	margin-left: 4px;
+}
+
+.openrouter-info-simple-ctx {
+	margin-top: 6px;
+	font-size: 11px;
+	color: #8c8f94;
+}
