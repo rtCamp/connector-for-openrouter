@@ -494,7 +494,7 @@ class OpenRouterSettings {
 	 */
 	public static function get_selected_image_model(): string {
 		$settings    = self::get_settings();
-		$image_model = ! empty( $settings[ self::KEY_IMAGE_MODEL ] ) ? (string) $settings[ self::KEY_IMAGE_MODEL ] : 'openrouter/free';
+		$image_model = ! empty( $settings[ self::KEY_IMAGE_MODEL ] ) ? (string) $settings[ self::KEY_IMAGE_MODEL ] : 'openrouter/auto';
 		return trim( $image_model );
 	}
 
