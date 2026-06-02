@@ -6,6 +6,9 @@
  */
 
 import './style.scss';
+import apiFetch from '@wordpress/api-fetch';
+import domReady from '@wordpress/dom-ready';
+import { __ } from '@wordpress/i18n';
 
 // Type definitions for OpenRouter Settings structures
 interface OpenRouterSettingsI18n {
@@ -514,14 +517,13 @@ interface AjaxResponse {
 		statusEl: HTMLElement,
 		infoEl: HTMLElement
 	): void {
-		statusEl.textContent = i18n.loading || 'Loading models…';
+		statusEl.textContent =
+			i18n.loading || __('Loading models…', 'connector-for-openrouter');
 		statusEl.className = 'openrouter-status';
 
-		window
-			.fetch(ajaxUrl, { credentials: 'same-origin' })
-			.then(function (res) {
-				return res.json() as Promise<AjaxResponse>;
-			})
+		apiFetch<AjaxResponse>({
+			url: ajaxUrl,
+		})
 			.then(function (data) {
 				if (!data.success || !Array.isArray(data.data)) {
 					statusEl.textContent =
@@ -529,7 +531,10 @@ interface AjaxResponse {
 							? data.data
 							: null) ||
 						i18n.errorLoad ||
-						'Could not load models.';
+						__(
+							'Could not load models.',
+							'connector-for-openrouter'
+						);
 					statusEl.style.color = '#d63638';
 					return;
 				}
@@ -539,7 +544,9 @@ interface AjaxResponse {
 
 				statusEl.textContent =
 					allModels.length +
-					(i18n.modelsCount || ' models available.');
+					' ' +
+					(i18n.modelsCount ||
+						__('models available.', 'connector-for-openrouter'));
 				statusEl.style.color = ''; // reset to stylesheet default
 
 				// Render info badge details for the already active selection
@@ -554,9 +561,12 @@ interface AjaxResponse {
 					renderModelInfo(found, infoEl);
 				}
 			})
-			.catch(function () {
+			.catch(function (error: unknown) {
+				const err = error as { message?: string };
 				statusEl.textContent =
-					i18n.errorLoad || 'Could not load models.';
+					err?.message ||
+					i18n.errorLoad ||
+					__('Could not load models.', 'connector-for-openrouter');
 				statusEl.style.color = '#d63638';
 			});
 	}
@@ -574,14 +584,13 @@ interface AjaxResponse {
 		imageStatusEl: HTMLElement,
 		imageInfoEl: HTMLElement
 	): void {
-		imageStatusEl.textContent = i18n.loading || 'Loading models…';
+		imageStatusEl.textContent =
+			i18n.loading || __('Loading models…', 'connector-for-openrouter');
 		imageStatusEl.className = 'openrouter-status';
 
-		window
-			.fetch(imageAjaxUrl, { credentials: 'same-origin' })
-			.then(function (res) {
-				return res.json() as Promise<AjaxResponse>;
-			})
+		apiFetch<AjaxResponse>({
+			url: imageAjaxUrl,
+		})
 			.then(function (data) {
 				if (!data.success || !Array.isArray(data.data)) {
 					imageStatusEl.textContent =
@@ -589,7 +598,10 @@ interface AjaxResponse {
 							? data.data
 							: null) ||
 						i18n.errorLoad ||
-						'Could not load models.';
+						__(
+							'Could not load models.',
+							'connector-for-openrouter'
+						);
 					imageStatusEl.style.color = '#d63638';
 					return;
 				}
@@ -598,7 +610,9 @@ interface AjaxResponse {
 				isImageLoaded = true;
 
 				imageStatusEl.textContent =
-					allImageModels.length + ' image models available.';
+					allImageModels.length +
+					' ' +
+					__('image models available.', 'connector-for-openrouter');
 				imageStatusEl.style.color = ''; // reset to stylesheet default
 
 				if (savedImageModel) {
@@ -609,9 +623,12 @@ interface AjaxResponse {
 					renderModelInfo(selectedImageModelData, imageInfoEl);
 				}
 			})
-			.catch(function () {
+			.catch(function (error: unknown) {
+				const err = error as { message?: string };
 				imageStatusEl.textContent =
-					i18n.errorLoad || 'Could not load models.';
+					err?.message ||
+					i18n.errorLoad ||
+					__('Could not load models.', 'connector-for-openrouter');
 				imageStatusEl.style.color = '#d63638';
 			});
 	}
@@ -766,9 +783,5 @@ interface AjaxResponse {
 	}
 
 	// Initialize logic when page and DOM are ready
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', init);
-	} else {
-		init();
-	}
+	domReady(init);
 })();

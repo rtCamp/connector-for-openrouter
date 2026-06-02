@@ -18,6 +18,11 @@
 		"node": ">=22.0.0",
 		"npm": ">=10.0.0"
 	},
+	"dependencies": {
+		"@wordpress/api-fetch": "^7.47.0",
+		"@wordpress/dom-ready": "^4.47.0",
+		"@wordpress/i18n": "^6.20.0"
+	},
 	"devDependencies": {
 		"@wordpress/eslint-plugin": "^24.2.0",
 		"@wordpress/scripts": "^31.5.0",
