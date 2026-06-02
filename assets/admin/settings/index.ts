@@ -76,22 +76,25 @@ interface OpenRouterModel {
 	 */
 	function formatPrice(priceStr: string | undefined, key?: string): string {
 		if (!priceStr) {
-			return i18n.na || 'N/A';
+			return i18n.na || __('N/A', 'connector-for-openrouter');
 		}
 		const price = parseFloat(priceStr);
 		if (isNaN(price)) {
-			return i18n.na || 'N/A';
+			return i18n.na || __('N/A', 'connector-for-openrouter');
 		}
 		if (price < 0) {
-			return 'Unavailable';
+			return __('Unavailable', 'connector-for-openrouter');
 		}
 		if (price === 0) {
-			return i18n.free || 'Free';
+			return i18n.free || __('Free', 'connector-for-openrouter');
 		}
 
 		// Handle visual assets and other absolute pricing units
 		if (key === 'image' || key === 'web_search') {
-			const unit = key === 'image' ? ' / image' : ' / req';
+			const unit =
+				key === 'image'
+					? ' ' + __('/ image', 'connector-for-openrouter')
+					: ' ' + __('/ req', 'connector-for-openrouter');
 			let formatted = '';
 			const exponent = Math.floor(Math.log(price) / Math.LN10);
 			if (exponent < 0) {
@@ -119,7 +122,10 @@ interface OpenRouterModel {
 			perMillion >= 1
 				? '$' + perMillion.toFixed(2)
 				: '$' + perMillion.toPrecision(3);
-		return formatted + (i18n.perMillion || '/1M');
+		return (
+			formatted +
+			(i18n.perMillion || __('/1M', 'connector-for-openrouter'))
+		);
 	}
 
 	/**
@@ -294,7 +300,7 @@ interface OpenRouterModel {
 				model.context_length && typeof model.context_length === 'number'
 					? formatContext(model.context_length) +
 						' ' +
-						(i18n.ctx || 'ctx')
+						(i18n.ctx || __('ctx', 'connector-for-openrouter'))
 					: '';
 			const nameDisplay =
 				model.name && model.name !== modelId ? model.name : '';
@@ -321,12 +327,17 @@ interface OpenRouterModel {
 						'</span>'
 					: '') +
 				'<span class="openrouter-dropdown-item-meta">' +
-				escapeHtml(i18n.inPrice || 'Prompt:') +
+				escapeHtml(
+					i18n.inPrice || __('Prompt:', 'connector-for-openrouter')
+				) +
 				' <strong class="openrouter-dropdown-item-price-val">' +
 				escapeHtml(inputPrice) +
 				'</strong>' +
 				'&nbsp;&nbsp;' +
-				escapeHtml(i18n.outPrice || 'Completion:') +
+				escapeHtml(
+					i18n.outPrice ||
+						__('Completion:', 'connector-for-openrouter')
+				) +
 				' <strong class="openrouter-dropdown-item-price-val">' +
 				escapeHtml(outputPrice) +
 				'</strong>' +
@@ -373,18 +384,16 @@ interface OpenRouterModel {
 		renderModelInfo(model, infoEl);
 	}
 
-	/**
-	 * Prettifies custom pricing keys (like prompt and completion) for user display.
-	 *
-	 * @param key The key to look up (e.g. prompt, completion, image).
-	 * @returns Formatted label text.
-	 */
 	function formatPricingKey(key: string): string {
 		if (key === 'prompt') {
-			return (i18n.inPrice || 'Prompt:').replace(/:$/, '');
+			return (
+				i18n.inPrice || __('Prompt:', 'connector-for-openrouter')
+			).replace(/:$/, '');
 		}
 		if (key === 'completion') {
-			return (i18n.outPrice || 'Completion:').replace(/:$/, '');
+			return (
+				i18n.outPrice || __('Completion:', 'connector-for-openrouter')
+			).replace(/:$/, '');
 		}
 		return key
 			.split('_')
@@ -414,7 +423,7 @@ interface OpenRouterModel {
 			model.context_length && typeof model.context_length === 'number'
 				? formatContext(model.context_length) +
 					' ' +
-					(i18n.ctx || 'ctx')
+					(i18n.ctx || __('ctx', 'connector-for-openrouter'))
 				: '';
 
 		let pricingHtml = '';
@@ -814,12 +823,16 @@ interface OpenRouterModel {
 
 		imageSearchInput.addEventListener('focus', function () {
 			if (!isImageLoaded) {
-				imageStatusEl.textContent = i18n.loading || 'Loading models…';
+				imageStatusEl.textContent =
+					i18n.loading ||
+					__('Loading models…', 'connector-for-openrouter');
 				return;
 			}
 
 			imageStatusEl.textContent =
-				getImageModelMatches('').length + ' image models available.';
+				getImageModelMatches('').length +
+				' ' +
+				__('image models available.', 'connector-for-openrouter');
 			filterImageModels(
 				this.value.trim().toLowerCase(),
 				imageDropdown,
