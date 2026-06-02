@@ -597,7 +597,7 @@ interface OpenRouterModel {
 		imageInfoEl: HTMLElement
 	): void {
 		renderImageDropdown(
-			getImageModelMatches(query),
+			getImageModelMatches(query).slice(0, 5),
 			dropdown,
 			imageSearchInput,
 			imageHiddenInput,
