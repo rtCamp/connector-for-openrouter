@@ -31,3 +31,9 @@ parameters:
 				- vendor/
 			analyseAndScan:
 				- node_modules (?)
+
+		ignoreErrors:
+			-
+				message: '#Path in require\(\) .* is not a file or it does not exist\.#'
+				path: src/Settings/OpenRouterSettings.php
+				reportUnmatched: false
