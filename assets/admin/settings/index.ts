@@ -149,6 +149,105 @@ interface OpenRouterModel {
 	}
 
 	/**
+	 * Extracts provider info for brand styling from model ID.
+	 *
+	 * @param modelId Model identifier string.
+	 * @returns Object with provider display name and CSS class.
+	 */
+	function getProviderInfo(modelId: string): {
+		label: string;
+		class: string;
+	} {
+		const parts = modelId.split('/');
+		if (parts.length > 1) {
+			const provider = parts[0].toLowerCase();
+			switch (provider) {
+				case 'openai':
+					return {
+						label: 'OpenAI',
+						class: 'openrouter-provider-openai',
+					};
+				case 'anthropic':
+					return {
+						label: 'Anthropic',
+						class: 'openrouter-provider-anthropic',
+					};
+				case 'google':
+					return {
+						label: 'Google',
+						class: 'openrouter-provider-google',
+					};
+				case 'meta':
+				case 'meta-llama':
+					return { label: 'Meta', class: 'openrouter-provider-meta' };
+				case 'mistral':
+				case 'mistralai':
+					return {
+						label: 'Mistral',
+						class: 'openrouter-provider-mistral',
+					};
+				case 'deepseek':
+					return {
+						label: 'DeepSeek',
+						class: 'openrouter-provider-deepseek',
+					};
+				case 'cohere':
+					return {
+						label: 'Cohere',
+						class: 'openrouter-provider-cohere',
+					};
+				case 'stabilityai':
+					return {
+						label: 'Stability',
+						class: 'openrouter-provider-stability',
+					};
+				case 'black-forest-labs':
+					return { label: 'BFL', class: 'openrouter-provider-bfl' };
+				default:
+					return {
+						label:
+							provider.charAt(0).toUpperCase() +
+							provider.slice(1),
+						class: 'openrouter-provider-generic',
+					};
+			}
+		}
+		return { label: 'AI', class: 'openrouter-provider-generic' };
+	}
+
+	/**
+	 * Highlights the searched query inside the matching string.
+	 *
+	 * @param text  Full text to search within.
+	 * @param query Searching characters.
+	 * @returns Highlighted HTML string.
+	 */
+	function highlightText(text: string, query: string): string {
+		if (!query) {
+			return escapeHtml(text);
+		}
+		try {
+			const escapedQuery = query.replace(
+				/[-\/\\^$*+?.()|[\]{}]/g,
+				'\\$&'
+			);
+			const regex = new RegExp('(' + escapedQuery + ')', 'gi');
+			const parts = text.split(regex);
+			return parts
+				.map((part) =>
+					regex.test(part)
+						? '<span class="openrouter-highlight">' +
+							escapeHtml(part) +
+							'</span>'
+						: escapeHtml(part)
+				)
+				.join('');
+		} catch (e) {
+			return escapeHtml(text);
+		}
+	}
+
+	/**
 	 * Renders up to 5 model suggestions into the autocomplete dropdown menu.
 	 *
 	 * @param matches     Filtered list of models matching search keywords.
@@ -156,13 +255,15 @@ interface OpenRouterModel {
 	 * @param searchInput Autocomplete text input.
 	 * @param hiddenInput Hidden field storing final saved model name.
 	 * @param infoEl      Block underneath the input displaying selection details.
+	 * @param queryText   Search query term to highlight.
 	 */
 	function renderDropdown(
 		matches: OpenRouterModel[],
 		dropdown: HTMLElement,
 		searchInput: HTMLInputElement,
 		hiddenInput: HTMLInputElement,
-		infoEl: HTMLElement
+		infoEl: HTMLElement,
+		queryText: string = ''
 	): void {
 		dropdown.innerHTML = '';
 
@@ -189,13 +290,22 @@ interface OpenRouterModel {
 			const nameDisplay =
 				model.name && model.name !== modelId ? model.name : '';
 
+			const provider = getProviderInfo(modelId);
+
 			const item = document.createElement('div');
 			item.setAttribute('role', 'option');
 			item.className = 'openrouter-dropdown-item';
 			item.innerHTML =
+				'<div class="openrouter-dropdown-item-header">' +
 				'<strong class="openrouter-dropdown-item-id">' +
-				escapeHtml(modelId) +
+				highlightText(modelId, queryText) +
 				'</strong>' +
+				'<span class="openrouter-provider-tag ' +
+				provider.class +
+				'">' +
+				escapeHtml(provider.label) +
+				'</span>' +
+				'</div>' +
 				(nameDisplay
 					? '<span class="openrouter-dropdown-item-name">' +
 						escapeHtml(nameDisplay) +
@@ -203,16 +313,16 @@ interface OpenRouterModel {
 					: '') +
 				'<span class="openrouter-dropdown-item-meta">' +
 				escapeHtml(i18n.inPrice || 'Prompt:') +
-				' <strong>' +
+				' <strong class="openrouter-dropdown-item-price-val">' +
 				escapeHtml(inputPrice) +
 				'</strong>' +
 				'&nbsp;&nbsp;' +
 				escapeHtml(i18n.outPrice || 'Completion:') +
-				' <strong>' +
+				' <strong class="openrouter-dropdown-item-price-val">' +
 				escapeHtml(outputPrice) +
 				'</strong>' +
 				(ctxText
-					? '&nbsp;&nbsp;<span class="openrouter-dropdown-item-ctx">' +
+					? '<span class="openrouter-dropdown-item-ctx">' +
 						escapeHtml(ctxText) +
 						'</span>'
 					: '') +
@@ -233,11 +343,12 @@ interface OpenRouterModel {
 	/**
 	 * Commits a model selection: updates the visible input, the hidden value
 	 * field, and the info line below the field, then closes the dropdown.
-	 * @param model
-	 * @param searchInput
-	 * @param hiddenInput
-	 * @param dropdown
-	 * @param infoEl
+	 *
+	 * @param model       Active model object details.
+	 * @param searchInput Autocomplete input element.
+	 * @param hiddenInput Hidden value storage input element.
+	 * @param dropdown    Autocomplete dropdown container.
+	 * @param infoEl      Information badge container.
 	 */
 	function selectModel(
 		model: OpenRouterModel,
@@ -318,8 +429,15 @@ interface OpenRouterModel {
 			keys.forEach(function (key) {
 				const label = formatPricingKey(key);
 				const value = formatPrice(pricing[key], key);
+				const isFree = value.toLowerCase().includes('free');
+				const badgeClass = isFree
+					? 'openrouter-info-badge openrouter-info-badge-free'
+					: 'openrouter-info-badge';
+
 				pricingHtml +=
-					'<span class="openrouter-info-badge">' +
+					'<span class="' +
+					badgeClass +
+					'">' +
 					escapeHtml(label) +
 					': <strong>' +
 					escapeHtml(value) +
@@ -332,6 +450,19 @@ interface OpenRouterModel {
 					escapeHtml(ctxText) +
 					'</span>';
 			}
+
+			// Add direct link to model page on OpenRouter if it is a specific model
+			if (model.id && model.id !== 'openrouter/auto') {
+				pricingHtml +=
+					'<a href="https://openrouter.ai/' +
+					escapeHtml(model.id) +
+					'" target="_blank" rel="noopener noreferrer" class="openrouter-info-external-link">' +
+					escapeHtml(
+						__('View on OpenRouter', 'connector-for-openrouter')
+					) +
+					'</a>';
+			}
+
 			pricingHtml += '</div>';
 		} else if (ctxText) {
 			pricingHtml =
@@ -345,11 +476,12 @@ interface OpenRouterModel {
 
 	/**
 	 * Filters the list of loaded text models and populates results inside the dropdown.
-	 * @param query
-	 * @param dropdown
-	 * @param searchInput
-	 * @param hiddenInput
-	 * @param infoEl
+	 *
+	 * @param query       Search query query.
+	 * @param dropdown    Dropdown element.
+	 * @param searchInput Autocomplete input.
+	 * @param hiddenInput Hidden value storage input.
+	 * @param infoEl      Information badge container.
 	 */
 	function filterModels(
 		query: string,
@@ -370,12 +502,21 @@ interface OpenRouterModel {
 			})
 			.slice(0, 5);
 
-		renderDropdown(matches, dropdown, searchInput, hiddenInput, infoEl);
+		renderDropdown(
+			matches,
+			dropdown,
+			searchInput,
+			hiddenInput,
+			infoEl,
+			query
+		);
 	}
 
 	/**
 	 * Filters loaded image generation models based on our active search terms.
-	 * @param query
+	 *
+	 * @param query Active search term.
+	 * @returns Matches array list of image models.
 	 */
 	function getImageModelMatches(query: string): OpenRouterModel[] {
 		const imageModels = allImageModels;
@@ -395,90 +536,40 @@ interface OpenRouterModel {
 
 	/**
 	 * Displays list suggestions for OpenRouter models capable of image output.
-	 * @param matches
-	 * @param dropdown
-	 * @param imageSearchInput
-	 * @param imageHiddenInput
-	 * @param imageInfoEl
+	 *
+	 * @param matches          Matches list to display.
+	 * @param dropdown         Dropdown container.
+	 * @param imageSearchInput Search input field.
+	 * @param imageHiddenInput Hidden saved value field.
+	 * @param imageInfoEl      Information badge container.
+	 * @param queryText        Query string.
 	 */
 	function renderImageDropdown(
 		matches: OpenRouterModel[],
 		dropdown: HTMLElement,
 		imageSearchInput: HTMLInputElement,
 		imageHiddenInput: HTMLInputElement,
-		imageInfoEl: HTMLElement
+		imageInfoEl: HTMLElement,
+		queryText: string = ''
 	): void {
-		dropdown.innerHTML = '';
-
-		if (matches.length === 0) {
-			dropdown.style.display = 'none';
-			return;
-		}
-
-		matches.forEach(function (model) {
-			const modelId = typeof model.id === 'string' ? model.id : '';
-			if (!modelId) {
-				return;
-			}
-
-			const pricing = model.pricing || {};
-			const inputPrice = formatPrice(pricing.prompt);
-			const outputPrice = formatPrice(pricing.completion);
-			const ctxText =
-				model.context_length && typeof model.context_length === 'number'
-					? formatContext(model.context_length) +
-						' ' +
-						(i18n.ctx || 'ctx')
-					: '';
-
-			const item = document.createElement('div');
-			item.setAttribute('role', 'option');
-			item.className = 'openrouter-dropdown-item';
-			item.innerHTML =
-				'<strong class="openrouter-dropdown-item-id">' +
-				escapeHtml(modelId) +
-				'</strong>' +
-				'<span class="openrouter-dropdown-item-meta">' +
-				escapeHtml(i18n.inPrice || 'Prompt:') +
-				' <strong>' +
-				escapeHtml(inputPrice) +
-				'</strong>' +
-				'&nbsp;&nbsp;' +
-				escapeHtml(i18n.outPrice || 'Completion:') +
-				' <strong>' +
-				escapeHtml(outputPrice) +
-				'</strong>' +
-				(ctxText
-					? '&nbsp;&nbsp;<span class="openrouter-dropdown-item-ctx">' +
-						escapeHtml(ctxText) +
-						'</span>'
-					: '') +
-				'</span>';
-
-			item.addEventListener('mousedown', function (e) {
-				e.preventDefault();
-				selectModel(
-					model,
-					imageSearchInput,
-					imageHiddenInput,
-					dropdown,
-					imageInfoEl
-				);
-			});
-
-			dropdown.appendChild(item);
-		});
-
-		dropdown.style.display = 'block';
+		renderDropdown(
+			matches,
+			dropdown,
+			imageSearchInput,
+			imageHiddenInput,
+			imageInfoEl,
+			queryText
+		);
 	}
 
 	/**
 	 * Filters image-generation models and renders appropriate suggestions.
-	 * @param query
-	 * @param dropdown
-	 * @param imageSearchInput
-	 * @param imageHiddenInput
-	 * @param imageInfoEl
+	 *
+	 * @param query            Search query query.
+	 * @param dropdown         Dropdown element.
+	 * @param imageSearchInput Autocomplete input.
+	 * @param imageHiddenInput Hidden value storage input.
+	 * @param imageInfoEl      Information badge container.
 	 */
 	function filterImageModels(
 		query: string,
@@ -492,16 +583,18 @@ interface OpenRouterModel {
 			dropdown,
 			imageSearchInput,
 			imageHiddenInput,
-			imageInfoEl
+			imageInfoEl,
+			query
 		);
 	}
 
 	/**
 	 * Fetches all available OpenRouter text models via WordPress REST API.
 	 * Once loaded, it shows a tally status and highlights details on any pre-saved selection.
-	 * @param savedModel
-	 * @param statusEl
-	 * @param infoEl
+	 *
+	 * @param savedModel Saved model value.
+	 * @param statusEl   Status element container.
+	 * @param infoEl     Information details card container.
 	 */
 	function loadModels(
 		savedModel: string,
@@ -510,7 +603,7 @@ interface OpenRouterModel {
 	): void {
 		statusEl.textContent =
 			i18n.loading || __('Loading models…', 'connector-for-openrouter');
-		statusEl.className = 'openrouter-status';
+		statusEl.className = 'openrouter-status openrouter-status-loading';
 
 		apiFetch<OpenRouterModel[]>({
 			path: '/connector-for-openrouter/v1/models',
@@ -524,6 +617,8 @@ interface OpenRouterModel {
 					' ' +
 					(i18n.modelsCount ||
 						__('models available.', 'connector-for-openrouter'));
+				statusEl.className =
+					'openrouter-status openrouter-status-ready';
 				statusEl.style.color = ''; // reset to stylesheet default
 
 				// Render info badge details for the already active selection
@@ -535,6 +630,9 @@ interface OpenRouterModel {
 							break;
 						}
 					}
+					if (!found && savedModel) {
+						found = { id: savedModel };
+					}
 					renderModelInfo(found, infoEl);
 				}
 			})
@@ -544,15 +642,17 @@ interface OpenRouterModel {
 					err?.message ||
 					i18n.errorLoad ||
 					__('Could not load models.', 'connector-for-openrouter');
+				statusEl.className = 'openrouter-status';
 				statusEl.style.color = '#d63638';
 			});
 	}
 
 	/**
 	 * Fetches image-generation models and resolves pre-loaded pricing cards.
-	 * @param savedImageModel
-	 * @param imageStatusEl
-	 * @param imageInfoEl
+	 *
+	 * @param savedImageModel Saved image model identifier value.
+	 * @param imageStatusEl   Status element container.
+	 * @param imageInfoEl     Information details card container.
 	 */
 	function loadImageModels(
 		savedImageModel: string,
@@ -561,7 +661,7 @@ interface OpenRouterModel {
 	): void {
 		imageStatusEl.textContent =
 			i18n.loading || __('Loading models…', 'connector-for-openrouter');
-		imageStatusEl.className = 'openrouter-status';
+		imageStatusEl.className = 'openrouter-status openrouter-status-loading';
 
 		apiFetch<OpenRouterModel[]>({
 			path: '/connector-for-openrouter/v1/image-models',
@@ -574,13 +674,16 @@ interface OpenRouterModel {
 					allImageModels.length +
 					' ' +
 					__('image models available.', 'connector-for-openrouter');
+				imageStatusEl.className =
+					'openrouter-status openrouter-status-ready';
 				imageStatusEl.style.color = ''; // reset to stylesheet default
 
 				if (savedImageModel) {
 					const selectedImageModelData =
 						getImageModelMatches('').find(function (model) {
 							return model.id === savedImageModel;
-						}) || null;
+						}) ||
+						(savedImageModel ? { id: savedImageModel } : null);
 					renderModelInfo(selectedImageModelData, imageInfoEl);
 				}
 			})
@@ -590,6 +693,7 @@ interface OpenRouterModel {
 					err?.message ||
 					i18n.errorLoad ||
 					__('Could not load models.', 'connector-for-openrouter');
+				imageStatusEl.className = 'openrouter-status';
 				imageStatusEl.style.color = '#d63638';
 			});
 	}
@@ -668,7 +772,7 @@ interface OpenRouterModel {
 			// Delay a split-second to allow dropdown selection clicks to resolve first
 			setTimeout(function () {
 				dropdown.style.display = 'none';
-			}, 150);
+			}, 200);
 		});
 
 		searchInput.addEventListener('focus', function () {
@@ -726,7 +830,7 @@ interface OpenRouterModel {
 		imageSearchInput.addEventListener('blur', function () {
 			setTimeout(function () {
 				imageDropdown.style.display = 'none';
-			}, 150);
+			}, 200);
 		});
 
 		imageSearchInput.addEventListener('keydown', function (e) {

@@ -140,34 +140,68 @@ class OpenRouterSettings {
 		?>
 
 		<div class="wrap openrouter-settings-wrap">
-			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-			<p>
-				<?php
-				printf(
-					/* translators: 1: opening anchor tag, 2: closing anchor tag */
-					esc_html__( 'OpenRouter provides access to hundreds of AI models through a single API. Set your API key in %1$sSettings > Connectors%2$s.', 'connector-for-openrouter' ),
-					'<a href="' . esc_url( admin_url( 'options-connectors.php' ) ) . '">',
-					'</a>'
-				);
-				?>
-			</p>
-			<p>
-				<?php
-				printf(
-					/* translators: 1: opening anchor tag, 2: closing anchor tag */
-					esc_html__( 'Browse available models and their pricing at %1$sopenrouter.ai/models%2$s.', 'connector-for-openrouter' ),
-					'<a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer">',
-					'</a>'
-				);
-				?>
-			</p>
-			<form action="options.php" method="post">
-				<?php
-				settings_fields( self::OPTION_GROUP );
-				do_settings_sections( self::PAGE_SLUG );
-				submit_button();
-				?>
-			</form>
+			<!-- Header Card -->
+			<div class="openrouter-header-card">
+				<div class="openrouter-header-logo">
+					<img src="<?php echo esc_url( plugins_url( 'assets/images/openrouter-logo.svg', CONNECTOR_FOR_OPENROUTER_PLUGIN_FILE ) ); ?>" alt="<?php esc_attr_e( 'OpenRouter Logo', 'connector-for-openrouter' ); ?>" width="32" height="32" />
+				</div>
+				<div class="openrouter-header-text">
+					<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+					<p class="openrouter-subtitle"><?php esc_html_e( 'Connect and configure default AI intelligence models seamlessly.', 'connector-for-openrouter' ); ?></p>
+				</div>
+			</div>
+
+			<!-- Notice / Action Cards -->
+			<div class="openrouter-dashboard-grid">
+				<div class="openrouter-dashboard-card openrouter-card-setup">
+					<div class="openrouter-card-icon">
+						<span class="dashicons dashicons-admin-generic"></span>
+					</div>
+					<div class="openrouter-card-body">
+						<h3><?php esc_html_e( 'API Key Configuration', 'connector-for-openrouter' ); ?></h3>
+						<p>
+							<?php
+							printf(
+								/* translators: 1: opening anchor tag, 2: closing anchor tag */
+								esc_html__( 'OpenRouter requires an API key to process requests. Set up your credentials under %1$sSettings > Connectors%2$s.', 'connector-for-openrouter' ),
+								'<a href="' . esc_url( admin_url( 'options-connectors.php' ) ) . '" class="openrouter-link">',
+								'</a>'
+							);
+							?>
+						</p>
+					</div>
+				</div>
+
+				<div class="openrouter-dashboard-card openrouter-card-explore">
+					<div class="openrouter-card-icon">
+						<span class="dashicons dashicons-search"></span>
+					</div>
+					<div class="openrouter-card-body">
+						<h3><?php esc_html_e( 'Explore Hundreds of Models', 'connector-for-openrouter' ); ?></h3>
+						<p>
+							<?php
+							printf(
+								/* translators: 1: opening anchor tag, 2: closing anchor tag */
+								esc_html__( 'Compare pricing, speed, latency, and context windows dynamically at %1$sopenrouter.ai/models%2$s.', 'connector-for-openrouter' ),
+								'<a href="https://openrouter.ai/models" target="_blank" rel="noopener noreferrer" class="openrouter-link">',
+								'</a>'
+							);
+							?>
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Settings Form Card -->
+			<div class="openrouter-settings-card">
+				<form action="options.php" method="post">
+					<?php
+					settings_fields( self::OPTION_GROUP );
+					do_settings_sections( self::PAGE_SLUG );
+					submit_button();
+					?>
+				</form>
+			</div>
 		</div>
 
 		<?php
@@ -191,34 +225,38 @@ class OpenRouterSettings {
 		$hidden_name   = self::OPTION_NAME . '[' . self::KEY_MODEL . ']';
 		?>
 
-		<div id="openrouter-model-container" class="openrouter-field-container">
-			<input
-				type="text"
-				id="<?php echo esc_attr( $input_id ); ?>"
-				class="regular-text"
-				placeholder="<?php esc_attr_e( 'Type 3+ letters to search models…', 'connector-for-openrouter' ); ?>"
-				value="<?php echo esc_attr( $current_model ); ?>"
-				autocomplete="off"
-				aria-label="<?php esc_attr_e( 'Search OpenRouter models', 'connector-for-openrouter' ); ?>"
-			/>
-			<input
-				type="hidden"
-				id="<?php echo esc_attr( $hidden_id ); ?>"
-				name="<?php echo esc_attr( $hidden_name ); ?>"
-				value="<?php echo esc_attr( $current_model ); ?>"
-			/>
-			<div
-				id="openrouter-model-dropdown"
-				role="listbox"
-				class="openrouter-dropdown"
-			></div>
+		<div class="openrouter-field-group">
+			<div id="openrouter-model-container" class="openrouter-field-container">
+				<span class="openrouter-search-icon dashicons dashicons-search"></span>
+				<input
+					type="text"
+					id="<?php echo esc_attr( $input_id ); ?>"
+					class="regular-text openrouter-search-input"
+					placeholder="<?php esc_attr_e( 'Type 3+ letters to search models…', 'connector-for-openrouter' ); ?>"
+					value="<?php echo esc_attr( $current_model ); ?>"
+					autocomplete="off"
+					aria-label="<?php esc_attr_e( 'Search OpenRouter models', 'connector-for-openrouter' ); ?>"
+				/>
+				<input
+					type="hidden"
+					id="<?php echo esc_attr( $hidden_id ); ?>"
+					name="<?php echo esc_attr( $hidden_name ); ?>"
+					value="<?php echo esc_attr( $current_model ); ?>"
+				/>
+				<div
+					id="openrouter-model-dropdown"
+					role="listbox"
+					class="openrouter-dropdown"
+				></div>
+			</div>
+
+			<span class="openrouter-tooltip-wrapper" tabindex="0" aria-describedby="openrouter-model-tooltip-desc" aria-label="<?php esc_attr_e( 'Model help description', 'connector-for-openrouter' ); ?>">
+				<span class="dashicons dashicons-editor-help"></span>
+				<span id="openrouter-model-tooltip-desc" role="tooltip" class="openrouter-tooltip-text"><?php esc_html_e( 'Choose a default OpenRouter model override. Leave empty to use the model requested by AI Client.', 'connector-for-openrouter' ); ?></span>
+			</span>
+			<span id="openrouter-model-status" class="openrouter-status"></span>
 		</div>
 
-		<span class="openrouter-tooltip-wrapper" tabindex="0" aria-describedby="openrouter-model-tooltip-desc" aria-label="<?php esc_attr_e( 'Model help description', 'connector-for-openrouter' ); ?>">
-			<span class="dashicons dashicons-editor-help"></span>
-			<span id="openrouter-model-tooltip-desc" role="tooltip" class="openrouter-tooltip-text"><?php esc_html_e( 'Choose a default OpenRouter model override. Leave empty to use the model requested by AI Client.', 'connector-for-openrouter' ); ?></span>
-		</span>
-		<span id="openrouter-model-status" class="openrouter-status"></span>
 		<div id="openrouter-model-info" class="openrouter-info"></div>
 
 		<?php
@@ -237,37 +275,41 @@ class OpenRouterSettings {
 		$hidden_name         = self::OPTION_NAME . '[' . self::KEY_IMAGE_MODEL . ']';
 		?>
 
-		<div id="openrouter-image-model-container" class="openrouter-field-container">
-			<input
-				type="text"
-				id="<?php echo esc_attr( $input_id ); ?>"
-				class="regular-text"
-				placeholder="<?php esc_attr_e( 'Type to search image models…', 'connector-for-openrouter' ); ?>"
-				value="<?php echo esc_attr( $current_image_model ); ?>"
-				autocomplete="off"
-				aria-label="<?php esc_attr_e( 'Search OpenRouter image generation models', 'connector-for-openrouter' ); ?>"
-			/>
-			<input
-				type="hidden"
-				id="<?php echo esc_attr( $hidden_id ); ?>"
-				name="<?php echo esc_attr( $hidden_name ); ?>"
-				value="<?php echo esc_attr( $current_image_model ); ?>"
-			/>
-			<div
-				id="openrouter-image-model-dropdown"
-				role="listbox"
-				class="openrouter-dropdown"
-			></div>
+		<div class="openrouter-field-group">
+			<div id="openrouter-image-model-container" class="openrouter-field-container">
+				<span class="openrouter-search-icon dashicons dashicons-search"></span>
+				<input
+					type="text"
+					id="<?php echo esc_attr( $input_id ); ?>"
+					class="regular-text openrouter-search-input"
+					placeholder="<?php esc_attr_e( 'Type to search image models…', 'connector-for-openrouter' ); ?>"
+					value="<?php echo esc_attr( $current_image_model ); ?>"
+					autocomplete="off"
+					aria-label="<?php esc_attr_e( 'Search OpenRouter image generation models', 'connector-for-openrouter' ); ?>"
+				/>
+				<input
+					type="hidden"
+					id="<?php echo esc_attr( $hidden_id ); ?>"
+					name="<?php echo esc_attr( $hidden_name ); ?>"
+					value="<?php echo esc_attr( $current_image_model ); ?>"
+				/>
+				<div
+					id="openrouter-image-model-dropdown"
+					role="listbox"
+					class="openrouter-dropdown"
+				></div>
+			</div>
+
+			<span class="openrouter-tooltip-wrapper" tabindex="0" aria-describedby="openrouter-image-model-tooltip-desc" aria-label="<?php esc_attr_e( 'Image model help description', 'connector-for-openrouter' ); ?>">
+				<span class="dashicons dashicons-editor-help"></span>
+				<span id="openrouter-image-model-tooltip-desc" role="tooltip" class="openrouter-tooltip-text"><?php esc_html_e( 'Choose a dedicated image generation model. This autocomplete lists all OpenRouter models that support image output.', 'connector-for-openrouter' ); ?></span>
+			</span>
+			<span id="openrouter-image-model-status" class="openrouter-status"></span>
 		</div>
 
-		<span class="openrouter-tooltip-wrapper" tabindex="0" aria-describedby="openrouter-image-model-tooltip-desc" aria-label="<?php esc_attr_e( 'Image model help description', 'connector-for-openrouter' ); ?>">
-			<span class="dashicons dashicons-editor-help"></span>
-			<span id="openrouter-image-model-tooltip-desc" role="tooltip" class="openrouter-tooltip-text"><?php esc_html_e( 'Choose a dedicated image generation model. This autocomplete lists all OpenRouter models that support image output.', 'connector-for-openrouter' ); ?></span>
-		</span>
-		<span id="openrouter-image-model-status" class="openrouter-status"></span>
 		<div id="openrouter-image-model-info" class="openrouter-info"></div>
 
-		<hr />
+		<hr class="openrouter-hr" />
 
 		<p class="description openrouter-description-italic">
 			<?php esc_html_e( 'Suggestions show input price, output price (per 1M tokens), and context length. Be aware that pricing for some models is based on average text and image output, which isn\'t listed here. Please verify the exact pricing at openrouter.ai/models.', 'connector-for-openrouter' ); ?>
