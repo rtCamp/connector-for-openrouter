@@ -4,7 +4,7 @@ Tags:              ai, openrouter, llm, connector, image-generation
 Requires at least: 7.0
 Requires PHP:      7.4
 Requires Plugins:  ai
-Stable tag:        1.0.0
+Stable tag:        1.1.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 Tested up to:      7.0
@@ -56,6 +56,12 @@ The plugin defaults to `openrouter/free` for text and `openrouter/auto` for imag
 
 == Changelog ==
 
+==1.1.0==
+* Updated overall settings page UI for better user experience and added tooltips for each setting to provide more context and guidance to users.
+* Added badges to indicate the different cost of each type of requsest such as input, output, image read, web search, cache read, and cache write to help users make informed decisions when selecting models and generating content.
+* Refactored code to convert plugins js files to TypeScript for better maintainability and type safety.
+* Updated dependencies to ensure compatibility with the latest WordPress and AI plugin versions.
+
 = 1.0.0 =
 
 * Initial release of the OpenRouter provider plugin.
@@ -63,5 +69,5 @@ The plugin defaults to `openrouter/free` for text and `openrouter/auto` for imag
 * Added OpenRouter image generation support via chat completions image modality.
 
 == Upgrade Notice ==
-= 1.0.0 =
-Initial release.
+= 1.1.0 =
+Updated overall settings page UI, added tooltips, badges for cost indication, and refactored code to TypeScript.

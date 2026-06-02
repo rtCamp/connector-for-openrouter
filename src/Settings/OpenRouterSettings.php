@@ -379,7 +379,7 @@ class OpenRouterSettings {
 	/**
 	 * Registers the REST API routes.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.0
 	 */
 	public function register_rest_routes(): void {
 		register_rest_route(
@@ -406,7 +406,7 @@ class OpenRouterSettings {
 	/**
 	 * Checks permissions for the REST API endpoints.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.0
 	 *
 	 * @return bool True if the user has permission, false otherwise.
 	 */
@@ -417,7 +417,7 @@ class OpenRouterSettings {
 	/**
 	 * REST API endpoint to retrieve available models.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.0
 	 *
 	 * @return \WP_REST_Response The REST response.
 	 */
@@ -473,7 +473,7 @@ class OpenRouterSettings {
 	/**
 	 * REST API endpoint to retrieve available image generation models.
 	 *
-	 * @since 1.0.0
+	 * @since 1.1.0
 	 *
 	 * @return \WP_REST_Response The REST response.
 	 */
