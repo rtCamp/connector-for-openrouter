@@ -23,18 +23,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class OpenRouterSettings {
 
-	private const OPTION_GROUP        = 'connector_for_openrouter_settings';
-	private const OPTION_NAME         = 'connector_for_openrouter_settings';
-	private const PAGE_SLUG           = 'connector-for-openrouter';
-	private const SECTION_ID          = 'connector_for_openrouter_main';
-	private const AJAX_ACTION_MODELS  = 'connector_for_openrouter_models';
-	private const AJAX_ACTION_IMAGE_MODELS = 'connector_for_openrouter_image_models';
-	private const NONCE_ACTION        = 'connector_for_openrouter_nonce';
-	private const KEY_MODEL           = 'model';
-	private const KEY_IMAGE_MODEL     = 'image_model';
-	private const MODELS_TRANSIENT    = 'ai_openrouter_models_v1';
+	private const OPTION_GROUP  = 'connector_for_openrouter_settings';
+	private const OPTION_NAME   = 'connector_for_openrouter_settings';
+	private const PAGE_SLUG     = 'connector-for-openrouter';
+	private const SECTION_ID    = 'connector_for_openrouter_main';
+	private const KEY_MODEL     = 'model';
+	private const KEY_IMAGE_MODEL = 'image_model';
+	private const MODELS_TRANSIENT = 'ai_openrouter_models_v1';
 	private const MODELS_IMAGE_TRANSIENT = 'ai_openrouter_image_models_v1';
-	private const MODELS_CACHE_TTL    = HOUR_IN_SECONDS;
+	private const MODELS_CACHE_TTL = HOUR_IN_SECONDS;
 	private const OPENROUTER_MODELS_URL = 'https://openrouter.ai/api/v1/models?output_modality=text';
 	private const OPENROUTER_IMAGE_MODELS_URL = 'https://openrouter.ai/api/v1/models?output_modality=image';
 
@@ -47,8 +44,7 @@ class OpenRouterSettings {
 		add_action( 'admin_init', [ $this, 'register_settings' ] );
 		add_action( 'admin_menu', [ $this, 'register_settings_screen' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_settings_script' ] );
-		add_action( 'wp_ajax_' . self::AJAX_ACTION_MODELS, [ $this, 'ajax_list_models' ] );
-		add_action( 'wp_ajax_' . self::AJAX_ACTION_IMAGE_MODELS, [ $this, 'ajax_list_image_models' ] );
+		add_action( 'rest_api_init', [ $this, 'register_rest_routes' ] );
 	}
 
 	/**
@@ -319,27 +315,9 @@ class OpenRouterSettings {
 			'connector-for-openrouter-settings',
 			'ConnectorForOpenrouterSettings',
 			[
-				'ajaxUrl'       => esc_url_raw(
-					add_query_arg(
-						[
-							'action'   => self::AJAX_ACTION_MODELS,
-							'_wpnonce' => wp_create_nonce( self::NONCE_ACTION ),
-						],
-						admin_url( 'admin-ajax.php' )
-					)
-				),
-				'imageAjaxUrl'  => esc_url_raw(
-					add_query_arg(
-						[
-							'action'   => self::AJAX_ACTION_IMAGE_MODELS,
-							'_wpnonce' => wp_create_nonce( self::NONCE_ACTION ),
-						],
-						admin_url( 'admin-ajax.php' )
-					)
-				),
-				'selectedModel' => self::get_selected_model(),
+				'selectedModel'      => self::get_selected_model(),
 				'selectedImageModel' => self::get_selected_image_model(),
-				'i18n'          => [
+				'i18n'               => [
 					'loading'     => __( 'Loading models…', 'connector-for-openrouter' ),
 					'noResults'   => __( 'No models found.', 'connector-for-openrouter' ),
 					'errorLoad'   => __( 'Could not load models.', 'connector-for-openrouter' ),
@@ -357,23 +335,54 @@ class OpenRouterSettings {
 	}
 
 	/**
-	 * Handles the AJAX request to list available OpenRouter models with pricing.
-	 *
-	 * Results are cached for one hour using WordPress transients to avoid
-	 * hammering the OpenRouter API on every settings page load.
+	 * Registers the REST API routes.
 	 *
 	 * @since 1.0.0
 	 */
-	public function ajax_list_models(): void {
-		check_ajax_referer( self::NONCE_ACTION );
+	public function register_rest_routes(): void {
+		register_rest_route(
+			'connector-for-openrouter/v1',
+			'/models',
+			[
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'get_models_endpoint' ],
+				'permission_callback' => [ $this, 'check_rest_permissions' ],
+			]
+		);
 
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( __( 'Insufficient permissions.', 'connector-for-openrouter' ), 403 );
-		}
+		register_rest_route(
+			'connector-for-openrouter/v1',
+			'/image-models',
+			[
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'get_image_models_endpoint' ],
+				'permission_callback' => [ $this, 'check_rest_permissions' ],
+			]
+		);
+	}
 
+	/**
+	 * Checks permissions for the REST API endpoints.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool True if the user has permission, false otherwise.
+	 */
+	public function check_rest_permissions(): bool {
+		return current_user_can( 'manage_options' );
+	}
+
+	/**
+	 * REST API endpoint to retrieve available models.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return \WP_REST_Response The REST response.
+	 */
+	public function get_models_endpoint(): \WP_REST_Response {
 		$cached = get_transient( self::MODELS_TRANSIENT );
 		if ( false !== $cached && is_array( $cached ) ) {
-			wp_send_json_success( $cached );
+			return new \WP_REST_Response( $cached, 200 );
 		}
 
 		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get -- External request to OpenRouter public models endpoint.
@@ -389,12 +398,11 @@ class OpenRouterSettings {
 		);
 
 		if ( is_wp_error( $response ) ) {
-			wp_send_json_error(
-				sprintf(
-					/* translators: %s: Error message. */
-					__( 'Could not fetch OpenRouter models. Error: %s', 'connector-for-openrouter' ),
-					$response->get_error_message()
-				),
+			return new \WP_REST_Response(
+				[
+					// translators: %s: Error message.
+					'message' => sprintf( __( 'Could not fetch OpenRouter models. Error: %s', 'connector-for-openrouter' ), $response->get_error_message() ),
+				],
 				500
 			);
 		}
@@ -403,7 +411,7 @@ class OpenRouterSettings {
 		$data = json_decode( $body, true );
 
 		if ( ! is_array( $data ) || ! isset( $data['data'] ) || ! is_array( $data['data'] ) ) {
-			wp_send_json_error( __( 'Unexpected response from OpenRouter models endpoint.', 'connector-for-openrouter' ), 500 );
+			return new \WP_REST_Response( [ 'message' => __( 'Unexpected response from OpenRouter models endpoint.', 'connector-for-openrouter' ) ], 500 );
 		}
 
 		$models = array_values(
@@ -417,27 +425,20 @@ class OpenRouterSettings {
 
 		set_transient( self::MODELS_TRANSIENT, $models, self::MODELS_CACHE_TTL );
 
-		wp_send_json_success( $models );
+		return new \WP_REST_Response( $models, 200 );
 	}
 
 	/**
-	 * Handles the AJAX request to list image generation OpenRouter models.
-	 *
-	 * Uses the filtered OpenRouter endpoint:
-	 * /api/v1/models?output_modality=image&pricing=0
+	 * REST API endpoint to retrieve available image generation models.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return \WP_REST_Response The REST response.
 	 */
-	public function ajax_list_image_models(): void {
-		check_ajax_referer( self::NONCE_ACTION );
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( __( 'Insufficient permissions.', 'connector-for-openrouter' ), 403 );
-		}
-
+	public function get_image_models_endpoint(): \WP_REST_Response {
 		$cached = get_transient( self::MODELS_IMAGE_TRANSIENT );
 		if ( false !== $cached && is_array( $cached ) ) {
-			wp_send_json_success( $cached );
+			return new \WP_REST_Response( $cached, 200 );
 		}
 
 		// phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get -- External request to OpenRouter public models endpoint.
@@ -453,12 +454,11 @@ class OpenRouterSettings {
 		);
 
 		if ( is_wp_error( $response ) ) {
-			wp_send_json_error(
-				sprintf(
-					/* translators: %s: Error message. */
-					__( 'Could not fetch OpenRouter image models. Error: %s', 'connector-for-openrouter' ),
-					$response->get_error_message()
-				),
+			return new \WP_REST_Response(
+				[
+					// translators: %s: Error message.
+					'message' => sprintf( __( 'Could not fetch OpenRouter image models. Error: %s', 'connector-for-openrouter' ), $response->get_error_message() ),
+				],
 				500
 			);
 		}
@@ -467,7 +467,7 @@ class OpenRouterSettings {
 		$data = json_decode( $body, true );
 
 		if ( ! is_array( $data ) || ! isset( $data['data'] ) || ! is_array( $data['data'] ) ) {
-			wp_send_json_error( __( 'Unexpected response from OpenRouter image models endpoint.', 'connector-for-openrouter' ), 500 );
+			return new \WP_REST_Response( [ 'message' => __( 'Unexpected response from OpenRouter image models endpoint.', 'connector-for-openrouter' ) ], 500 );
 		}
 
 		$models = array_values(
@@ -481,7 +481,7 @@ class OpenRouterSettings {
 
 		set_transient( self::MODELS_IMAGE_TRANSIENT, $models, self::MODELS_CACHE_TTL );
 
-		wp_send_json_success( $models );
+		return new \WP_REST_Response( $models, 200 );
 	}
 
 	/**

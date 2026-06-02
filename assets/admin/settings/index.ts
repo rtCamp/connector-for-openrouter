@@ -26,8 +26,6 @@ interface OpenRouterSettingsI18n {
 }
 
 interface OpenRouterSettingsGlobal {
-	ajaxUrl?: string;
-	imageAjaxUrl?: string;
 	selectedModel?: string;
 	selectedImageModel?: string;
 	i18n?: OpenRouterSettingsI18n;
@@ -52,11 +50,6 @@ interface OpenRouterModel {
 	name?: string;
 	pricing?: Pricing;
 	context_length?: number;
-}
-
-interface AjaxResponse {
-	success: boolean;
-	data: OpenRouterModel[] | string;
 }
 
 (function () {
@@ -504,15 +497,13 @@ interface AjaxResponse {
 	}
 
 	/**
-	 * Fetches all available OpenRouter text models via WordPress AJAX.
+	 * Fetches all available OpenRouter text models via WordPress REST API.
 	 * Once loaded, it shows a tally status and highlights details on any pre-saved selection.
-	 * @param ajaxUrl
 	 * @param savedModel
 	 * @param statusEl
 	 * @param infoEl
 	 */
 	function loadModels(
-		ajaxUrl: string,
 		savedModel: string,
 		statusEl: HTMLElement,
 		infoEl: HTMLElement
@@ -521,25 +512,11 @@ interface AjaxResponse {
 			i18n.loading || __('Loading models…', 'connector-for-openrouter');
 		statusEl.className = 'openrouter-status';
 
-		apiFetch<AjaxResponse>({
-			url: ajaxUrl,
+		apiFetch<OpenRouterModel[]>({
+			path: '/connector-for-openrouter/v1/models',
 		})
 			.then(function (data) {
-				if (!data.success || !Array.isArray(data.data)) {
-					statusEl.textContent =
-						(data.data && typeof data.data === 'string'
-							? data.data
-							: null) ||
-						i18n.errorLoad ||
-						__(
-							'Could not load models.',
-							'connector-for-openrouter'
-						);
-					statusEl.style.color = '#d63638';
-					return;
-				}
-
-				allModels = data.data as OpenRouterModel[];
+				allModels = data;
 				isLoaded = true;
 
 				statusEl.textContent =
@@ -573,13 +550,11 @@ interface AjaxResponse {
 
 	/**
 	 * Fetches image-generation models and resolves pre-loaded pricing cards.
-	 * @param imageAjaxUrl
 	 * @param savedImageModel
 	 * @param imageStatusEl
 	 * @param imageInfoEl
 	 */
 	function loadImageModels(
-		imageAjaxUrl: string,
 		savedImageModel: string,
 		imageStatusEl: HTMLElement,
 		imageInfoEl: HTMLElement
@@ -588,25 +563,11 @@ interface AjaxResponse {
 			i18n.loading || __('Loading models…', 'connector-for-openrouter');
 		imageStatusEl.className = 'openrouter-status';
 
-		apiFetch<AjaxResponse>({
-			url: imageAjaxUrl,
+		apiFetch<OpenRouterModel[]>({
+			path: '/connector-for-openrouter/v1/image-models',
 		})
 			.then(function (data) {
-				if (!data.success || !Array.isArray(data.data)) {
-					imageStatusEl.textContent =
-						(data.data && typeof data.data === 'string'
-							? data.data
-							: null) ||
-						i18n.errorLoad ||
-						__(
-							'Could not load models.',
-							'connector-for-openrouter'
-						);
-					imageStatusEl.style.color = '#d63638';
-					return;
-				}
-
-				allImageModels = data.data as OpenRouterModel[];
+				allImageModels = data;
 				isImageLoaded = true;
 
 				imageStatusEl.textContent =
@@ -678,19 +639,12 @@ interface AjaxResponse {
 			return;
 		}
 
-		const ajaxUrl = settings.ajaxUrl || '';
-		const imageAjaxUrl = settings.imageAjaxUrl || '';
 		const savedModel = settings.selectedModel || '';
 		const savedImageModel = settings.selectedImageModel || '';
 
 		// Trigger model loading
-		loadModels(ajaxUrl, savedModel, statusEl, infoEl);
-		loadImageModels(
-			imageAjaxUrl,
-			savedImageModel,
-			imageStatusEl,
-			imageInfoEl
-		);
+		loadModels(savedModel, statusEl, infoEl);
+		loadImageModels(savedImageModel, imageStatusEl, imageInfoEl);
 
 		// Text Model inputs and events
 		searchInput.addEventListener('input', function () {
