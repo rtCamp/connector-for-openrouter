@@ -792,9 +792,7 @@ interface OpenRouterModel {
 			}
 
 			const query = this.value.trim().toLowerCase();
-			if (query.length >= 3) {
-				filterModels(query, dropdown, searchInput, hiddenInput, infoEl);
-			}
+			filterModels(query, dropdown, searchInput, hiddenInput, infoEl);
 		});
 
 		searchInput.addEventListener('keydown', function (e) {
