@@ -56,7 +56,7 @@ The plugin defaults to `openrouter/free` for text and `openrouter/auto` for imag
 
 == Changelog ==
 
-==1.1.0==
+= 1.1.0 =
 * Updated overall settings page UI for better user experience and added tooltips for each setting to provide more context and guidance to users.
 * Added badges to indicate the different cost of each type of requsest such as input, output, image read, web search, cache read, and cache write to help users make informed decisions when selecting models and generating content.
 * Refactored code to convert plugins js files to TypeScript for better maintainability and type safety.
