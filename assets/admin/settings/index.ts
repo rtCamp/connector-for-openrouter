@@ -160,56 +160,65 @@ interface OpenRouterModel {
 	} {
 		const parts = modelId.split('/');
 		if (parts.length > 1) {
-			const provider = parts[0].toLowerCase();
-			switch (provider) {
-				case 'openai':
-					return {
-						label: 'OpenAI',
-						class: 'openrouter-provider-openai',
-					};
-				case 'anthropic':
-					return {
-						label: 'Anthropic',
-						class: 'openrouter-provider-anthropic',
-					};
-				case 'google':
-					return {
-						label: 'Google',
-						class: 'openrouter-provider-google',
-					};
-				case 'meta':
-				case 'meta-llama':
-					return { label: 'Meta', class: 'openrouter-provider-meta' };
-				case 'mistral':
-				case 'mistralai':
-					return {
-						label: 'Mistral',
-						class: 'openrouter-provider-mistral',
-					};
-				case 'deepseek':
-					return {
-						label: 'DeepSeek',
-						class: 'openrouter-provider-deepseek',
-					};
-				case 'cohere':
-					return {
-						label: 'Cohere',
-						class: 'openrouter-provider-cohere',
-					};
-				case 'stabilityai':
-					return {
-						label: 'Stability',
-						class: 'openrouter-provider-stability',
-					};
-				case 'black-forest-labs':
-					return { label: 'BFL', class: 'openrouter-provider-bfl' };
-				default:
-					return {
-						label:
-							provider.charAt(0).toUpperCase() +
-							provider.slice(1),
-						class: 'openrouter-provider-generic',
-					};
+			const rawProvider = parts[0];
+			if (rawProvider !== undefined) {
+				const provider = rawProvider.toLowerCase();
+				switch (provider) {
+					case 'openai':
+						return {
+							label: 'OpenAI',
+							class: 'openrouter-provider-openai',
+						};
+					case 'anthropic':
+						return {
+							label: 'Anthropic',
+							class: 'openrouter-provider-anthropic',
+						};
+					case 'google':
+						return {
+							label: 'Google',
+							class: 'openrouter-provider-google',
+						};
+					case 'meta':
+					case 'meta-llama':
+						return {
+							label: 'Meta',
+							class: 'openrouter-provider-meta',
+						};
+					case 'mistral':
+					case 'mistralai':
+						return {
+							label: 'Mistral',
+							class: 'openrouter-provider-mistral',
+						};
+					case 'deepseek':
+						return {
+							label: 'DeepSeek',
+							class: 'openrouter-provider-deepseek',
+						};
+					case 'cohere':
+						return {
+							label: 'Cohere',
+							class: 'openrouter-provider-cohere',
+						};
+					case 'stabilityai':
+						return {
+							label: 'Stability',
+							class: 'openrouter-provider-stability',
+						};
+					case 'black-forest-labs':
+						return {
+							label: 'BFL',
+							class: 'openrouter-provider-bfl',
+						};
+					default:
+						return {
+							label:
+								provider.charAt(0).toUpperCase() +
+								provider.slice(1),
+							class: 'openrouter-provider-generic',
+						};
+				}
 			}
 		}
 		return { label: 'AI', class: 'openrouter-provider-generic' };
@@ -623,16 +632,9 @@ interface OpenRouterModel {
 
 				// Render info badge details for the already active selection
 				if (savedModel) {
-					let found: OpenRouterModel | null = null;
-					for (let idx = 0; idx < allModels.length; idx++) {
-						if (allModels[idx].id === savedModel) {
-							found = allModels[idx];
-							break;
-						}
-					}
-					if (!found && savedModel) {
-						found = { id: savedModel };
-					}
+					const found = allModels.find(
+						(model) => model.id === savedModel
+					) || { id: savedModel };
 					renderModelInfo(found, infoEl);
 				}
 			})
