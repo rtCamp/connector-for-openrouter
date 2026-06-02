@@ -17,14 +17,16 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: #0f172a;
+		background: #fff;
+		border: 1px solid #e2e8f0;
 		width: 3.5rem;
 		height: 3.5rem;
 		border-radius: 12px;
-		box-shadow: 0 8px 16px rgba(15, 23, 42, 0.15);
+		box-shadow: 0 8px 16px rgba(148, 163, 184, 0.1);
 		flex-shrink: 0;
 
-		svg {
+		svg,
+		img {
 			display: block;
 		}
 	}
