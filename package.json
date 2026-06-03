@@ -1,6 +1,15 @@
 {
 	"name": "connector-for-openrouter",
 	"private": true,
+	"files": [
+		"build",
+		"assets/images",
+		"languages",
+		"src",
+		"README.md",
+		"readme.txt",
+		"connector-for-openrouter.php"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/rtcamp/connector-for-openrouter.git"
@@ -8,6 +17,11 @@
 	"engines": {
 		"node": ">=22.0.0",
 		"npm": ">=10.0.0"
+	},
+	"dependencies": {
+		"@wordpress/api-fetch": "^7.47.0",
+		"@wordpress/dom-ready": "^4.47.0",
+		"@wordpress/i18n": "^6.20.0"
 	},
 	"devDependencies": {
 		"@wordpress/eslint-plugin": "^24.2.0",
@@ -18,13 +32,19 @@
 		"npm-run-all": "^4.1.5"
 	},
 	"scripts": {
+		"build": "wp-scripts build",
+		"dev": "wp-scripts start",
+		"format:js": "wp-scripts format ./assets/admin",
+		"lint:css": "wp-scripts lint-style",
+		"lint:css:fix": "wp-scripts lint-style --fix",
 		"lint:js": "wp-scripts lint-js",
 		"lint:js:fix": "npm run lint:js -- --fix",
 		"lint:php:fix": "composer run-script format",
 		"lint:php:stan": "composer run-script phpstan",
 		"lint:php": "composer run-script lint",
 		"lint": "npm-run-all --parallel lint:*",
-		"plugin-zip": "sh ./bin/plugin-zip.sh"
+		"i18n:pot": "wp i18n make-pot . languages/connector-for-openrouter.pot --domain=connector-for-openrouter --exclude=node_modules,vendor,tests",
+		"plugin-zip": "wp-scripts plugin-zip"
 	},
 	"overrides": {
 		"eslint": "^8.57.1",

@@ -6,7 +6,7 @@
  * Requires at least: 7.0
  * Requires PHP:      7.4
  * Requires Plugins:  ai
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            rtCamp
  * Author URI:        https://rtcamp.com
  * License:           GPL-2.0-or-later

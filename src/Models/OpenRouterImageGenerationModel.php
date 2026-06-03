@@ -48,7 +48,7 @@ use WordPress\AiClient\Results\Enums\FinishReasonEnum;
  *     modalities: list<string>,
  *     n?: int,
  *     size?: string,
- *     ...
+ *     ...<string, mixed>
  * }
  * @phpstan-type ImageMessageData array{
  *     images?: list<array{
