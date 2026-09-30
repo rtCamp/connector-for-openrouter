@@ -113,5 +113,5 @@ The source code is available on <a href="https://github.com/rtCamp/rtcamps-ai-pr
 * Added OpenRouter image generation support via chat completions image modality.
 
 == Upgrade Notice ==
-= 1.1.0 =
-Updated overall settings page UI, added tooltips, badges for cost indication, and refactored code to TypeScript.
+= 1.1.1 =
+Renamed the plugin to "rtCamp’s AI Provider for OpenRouter" for better clarity and branding.
