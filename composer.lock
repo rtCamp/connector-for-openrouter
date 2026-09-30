@@ -4,7 +4,7 @@
 		"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
 		"This file is @generated automatically"
 	],
-	"content-hash": "1d2d49eb331d2fee3febbd3f2ece23c9",
+	"content-hash": "b3f95c97118e96165f1ef7b3fb6a3eb5",
 	"packages": [],
 	"packages-dev": [
 		{
@@ -571,16 +571,16 @@
 		},
 		{
 			"name": "php-stubs/wordpress-stubs",
-			"version": "v6.9.4",
+			"version": "v7.1.0",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/php-stubs/wordpress-stubs.git",
-				"reference": "90a9412826b9944f93b10bf41d795b5fe68abcd5"
+				"reference": "394570301894799e69a4aa117c9c995427e3ba04"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/90a9412826b9944f93b10bf41d795b5fe68abcd5",
-				"reference": "90a9412826b9944f93b10bf41d795b5fe68abcd5",
+				"url": "https://api.github.com/repos/php-stubs/wordpress-stubs/zipball/394570301894799e69a4aa117c9c995427e3ba04",
+				"reference": "394570301894799e69a4aa117c9c995427e3ba04",
 				"shasum": ""
 			},
 			"conflict": {
@@ -590,13 +590,13 @@
 				"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
 				"nikic/php-parser": "^5.5",
 				"php": "^7.4 || ^8.0",
-				"php-stubs/generator": "^0.8.6",
+				"php-stubs/generator": "^0.9",
 				"phpdocumentor/reflection-docblock": "^6.0",
-				"phpstan/phpstan": "^2.1",
+				"phpstan/phpstan": "^2.2",
 				"phpunit/phpunit": "^9.5",
 				"symfony/polyfill-php80": "*",
-				"szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^1.1.1",
-				"wp-coding-standards/wpcs": "3.1.0 as 2.3.0"
+				"szepeviktor/phpcs-psr-12-neutron-hybrid-ruleset": "^1.2",
+				"wp-coding-standards/wpcs": "3.4.1 as 2.3.0"
 			},
 			"suggest": {
 				"paragonie/sodium_compat": "Pure PHP implementation of libsodium",
@@ -617,9 +617,9 @@
 			],
 			"support": {
 				"issues": "https://github.com/php-stubs/wordpress-stubs/issues",
-				"source": "https://github.com/php-stubs/wordpress-stubs/tree/v6.9.4"
+				"source": "https://github.com/php-stubs/wordpress-stubs/tree/v7.1.0"
 			},
-			"time": "2026-05-01T20:36:01+00:00"
+			"time": "2026-08-28T00:32:06+00:00"
 		},
 		{
 			"name": "phpcompatibility/php-compatibility",
@@ -1074,16 +1074,16 @@
 		},
 		{
 			"name": "phpstan/phpdoc-parser",
-			"version": "2.3.3",
+			"version": "2.3.6",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/phpstan/phpdoc-parser.git",
-				"reference": "fb19eedd2bb67ff8cf7a5502ad329e701d6398a3"
+				"reference": "1427af4647235b4a73b13940b1f1258d3584f36e"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/fb19eedd2bb67ff8cf7a5502ad329e701d6398a3",
-				"reference": "fb19eedd2bb67ff8cf7a5502ad329e701d6398a3",
+				"url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/1427af4647235b4a73b13940b1f1258d3584f36e",
+				"reference": "1427af4647235b4a73b13940b1f1258d3584f36e",
 				"shasum": ""
 			},
 			"require": {
@@ -1115,17 +1115,17 @@
 			"description": "PHPDoc parser with support for nullable, intersection and generic types",
 			"support": {
 				"issues": "https://github.com/phpstan/phpdoc-parser/issues",
-				"source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.3"
+				"source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.6"
 			},
-			"time": "2026-07-08T07:01:06+00:00"
+			"time": "2026-09-27T20:07:45+00:00"
 		},
 		{
 			"name": "phpstan/phpstan",
-			"version": "2.2.9",
+			"version": "2.2.16",
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/13d6b4f347bad222da436580c8304fa6f83e6bd0",
-				"reference": "13d6b4f347bad222da436580c8304fa6f83e6bd0",
+				"url": "https://api.github.com/repos/phpstan/phpstan/zipball/46a6d9060e5a7763adfcc21ebcb8b504ebdbcb92",
+				"reference": "46a6d9060e5a7763adfcc21ebcb8b504ebdbcb92",
 				"shasum": ""
 			},
 			"require": {
@@ -1181,7 +1181,7 @@
 					"type": "github"
 				}
 			],
-			"time": "2026-08-22T07:38:16+00:00"
+			"time": "2026-09-25T09:31:51+00:00"
 		},
 		{
 			"name": "phpstan/phpstan-deprecation-rules",
@@ -1697,21 +1697,21 @@
 		},
 		{
 			"name": "szepeviktor/phpstan-wordpress",
-			"version": "v2.0.3",
+			"version": "v2.0.4",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/szepeviktor/phpstan-wordpress.git",
-				"reference": "aa722f037b2d034828cd6c55ebe9e5c74961927e"
+				"reference": "84577e2ea1e4c2a95537fe5ea2ac8e18f4ceab1a"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/aa722f037b2d034828cd6c55ebe9e5c74961927e",
-				"reference": "aa722f037b2d034828cd6c55ebe9e5c74961927e",
+				"url": "https://api.github.com/repos/szepeviktor/phpstan-wordpress/zipball/84577e2ea1e4c2a95537fe5ea2ac8e18f4ceab1a",
+				"reference": "84577e2ea1e4c2a95537fe5ea2ac8e18f4ceab1a",
 				"shasum": ""
 			},
 			"require": {
 				"php": "^7.4 || ^8.0",
-				"php-stubs/wordpress-stubs": "^6.6.2",
+				"php-stubs/wordpress-stubs": ">=6.6.2",
 				"phpstan/phpstan": "^2.0"
 			},
 			"require-dev": {
@@ -1754,22 +1754,22 @@
 			],
 			"support": {
 				"issues": "https://github.com/szepeviktor/phpstan-wordpress/issues",
-				"source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v2.0.3"
+				"source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v2.0.4"
 			},
-			"time": "2025-09-14T02:58:22+00:00"
+			"time": "2026-05-22T16:22:09+00:00"
 		},
 		{
 			"name": "wordpress/php-ai-client",
-			"version": "1.4.0",
+			"version": "1.5.0",
 			"source": {
 				"type": "git",
 				"url": "https://github.com/WordPress/php-ai-client",
-				"reference": "a31b0ec6d4676d4a464055fef72173e2d8995214"
+				"reference": "77a59957763d550a9c92025a15bf565048b977b5"
 			},
 			"dist": {
 				"type": "zip",
-				"url": "https://api.github.com/repos/WordPress/php-ai-client/zipball/a31b0ec6d4676d4a464055fef72173e2d8995214",
-				"reference": "a31b0ec6d4676d4a464055fef72173e2d8995214",
+				"url": "https://api.github.com/repos/WordPress/php-ai-client/zipball/77a59957763d550a9c92025a15bf565048b977b5",
+				"reference": "77a59957763d550a9c92025a15bf565048b977b5",
 				"shasum": ""
 			},
 			"require": {
@@ -1795,14 +1795,14 @@
 				"slevomat/coding-standard": "^8.20",
 				"squizlabs/php_codesniffer": "^3.7 || ^4.0",
 				"symfony/dotenv": "^5.4",
-				"wordpress/anthropic-ai-provider": "^1.0",
-				"wordpress/google-ai-provider": "^1.0",
-				"wordpress/openai-ai-provider": "^1.0"
+				"wordpress/ai-provider-for-anthropic": "^1.0",
+				"wordpress/ai-provider-for-google": "^1.0",
+				"wordpress/ai-provider-for-openai": "^1.0"
 			},
 			"suggest": {
-				"wordpress/anthropic-ai-provider": "For Anthropic Claude model support",
-				"wordpress/google-ai-provider": "For Google Gemini model support",
-				"wordpress/openai-ai-provider": "For OpenAI GPT model support"
+				"wordpress/ai-provider-for-anthropic": "For Anthropic Claude model support",
+				"wordpress/ai-provider-for-google": "For Google Gemini model support",
+				"wordpress/ai-provider-for-openai": "For OpenAI GPT model support"
 			},
 			"type": "library",
 			"autoload": {
@@ -1834,7 +1834,7 @@
 				"issues": "https://github.com/WordPress/php-ai-client/issues",
 				"source": "https://github.com/WordPress/php-ai-client"
 			},
-			"time": "2026-07-15T01:43:23+00:00"
+			"time": "2026-09-16T20:36:49+00:00"
 		},
 		{
 			"name": "wp-coding-standards/wpcs",
