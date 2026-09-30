@@ -2,17 +2,17 @@
 /**
  * OpenRouter Image Generation Model.
  *
- * @package rtcamp/connector-for-openrouter
+ * @package rtcamp/rtcamps-ai-provider-for-openrouter
  *
  * @since 1.0.0
  */
 
 declare( strict_types=1 );
 
-namespace rtCamp\ConnectorForOpenrouter\Models;
+namespace rtCamp\AIProviderForOpenRouter\Models;
 
-use rtCamp\ConnectorForOpenrouter\Provider\OpenRouterProvider;
-use rtCamp\ConnectorForOpenrouter\Settings\OpenRouterSettings;
+use rtCamp\AIProviderForOpenRouter\Provider\OpenRouterProvider;
+use rtCamp\AIProviderForOpenRouter\Settings\OpenRouterSettings;
 use WordPress\AiClient\Common\Exception\InvalidArgumentException;
 use WordPress\AiClient\Files\DTO\File;
 use WordPress\AiClient\Files\Enums\MediaOrientationEnum;
@@ -157,7 +157,18 @@ class OpenRouterImageGenerationModel extends AbstractApiBasedModel implements Im
 		}
 
 		/** @var ImageGenerationParams $params */
-		return apply_filters( 'openrouter_image_generation_params', $params );
+
+		/**
+		 * Filters the OpenRouter image generation request parameters.
+		 *
+		 * @since 1.0.0
+		 * @since 1.1.1 Renamed hook to include the full plugin prefix.
+		 *
+		 * @param array<string, mixed> $params Request parameters for OpenRouter image generation.
+		 * @phpstan-param ImageGenerationParams $params
+		 */
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Hook is prefixed with the full plugin slug.
+		return apply_filters( 'rtcamps_ai_provider_for_openrouter_image_generation_params', $params );
 	}
 
 	/**

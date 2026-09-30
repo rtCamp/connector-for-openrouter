@@ -7,25 +7,35 @@
 /.editorconfig
 /.eslintignore
 /.eslintrc.json
+/.prettierignore
+/.prettierrc.cjs
+/.stylelintignore
+/.stylelintrc.json
 /.gitignore
 /.distignore
+/.nvmrc
 /phpcs.xml.dist
 /phpstan.neon.dist
+/phpunit.xml.dist
+/webpack.config.js
+/tsconfig.json
 /composer.json
 /composer.lock
 /package.json
 /package-lock.json
 /README.md
-/vendor
-/.nvmrc
 
-# Runtime source that should not be distributed as standalone files
+# Composer dependencies are dev-only (plugin uses internal PSR-4 autoloader)
+/vendor
+
+# Runtime source that should not be distributed (build directory is used instead)
+/assets/admin
 /assets/src
 /wp-assets
 
 # Duplicate packaged folder and archives
-/connector-for-openrouter
-/connector-for-openrouter.zip
+/rtcamps-ai-provider-for-openrouter
+/rtcamps-ai-provider-for-openrouter.zip
 *.zip
 
 # Git files

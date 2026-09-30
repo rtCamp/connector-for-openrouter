@@ -2,18 +2,18 @@
 /**
  * OpenRouter Provider.
  *
- * @package rtcamp/connector-for-openrouter
+ * @package rtcamp/rtcamps-ai-provider-for-openrouter
  *
  * @since 1.0.0
  */
 
 declare( strict_types=1 );
 
-namespace rtCamp\ConnectorForOpenrouter\Provider;
+namespace rtCamp\AIProviderForOpenRouter\Provider;
 
-use rtCamp\ConnectorForOpenrouter\Metadata\OpenRouterModelMetadataDirectory;
-use rtCamp\ConnectorForOpenrouter\Models\OpenRouterImageGenerationModel;
-use rtCamp\ConnectorForOpenrouter\Models\OpenRouterTextGenerationModel;
+use rtCamp\AIProviderForOpenRouter\Metadata\OpenRouterModelMetadataDirectory;
+use rtCamp\AIProviderForOpenRouter\Models\OpenRouterImageGenerationModel;
+use rtCamp\AIProviderForOpenRouter\Models\OpenRouterTextGenerationModel;
 use WordPress\AiClient\Common\Exception\RuntimeException;
 use WordPress\AiClient\Providers\ApiBasedImplementation\AbstractApiProvider;
 use WordPress\AiClient\Providers\Contracts\ModelMetadataDirectoryInterface;
@@ -36,6 +36,7 @@ class OpenRouterProvider extends AbstractApiProvider {
 	 *
 	 * @since 1.0.0
 	 */
+	// phpcs:ignore PluginCheck.CodeAnalysis.AIProvider.DirectIntegration -- AI Provider connects directly to OpenRouter API.
 	private const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
 
 	/**
@@ -93,13 +94,14 @@ class OpenRouterProvider extends AbstractApiProvider {
 	 */
 	protected static function createProviderMetadata(): ProviderMetadata {
 		return new ProviderMetadata(
-			'openrouter',
+			'rtcamps-ai-provider-for-openrouter',
 			'OpenRouter',
 			ProviderTypeEnum::cloud(),
+			// phpcs:ignore PluginCheck.CodeAnalysis.AIProvider.DirectIntegration -- Provider documentation reference URL.
 			'https://openrouter.ai/docs/api/reference/overview',
 			RequestAuthenticationMethod::apiKey(),
-			__( 'OpenRouter is a unified API gateway for hundreds of AI models from leading providers including Anthropic, Google, Meta, Mistral, and more.', 'connector-for-openrouter' ),
-			CONNECTOR_FOR_OPENROUTER_PLUGIN_DIR . 'assets/images/openrouter-logo.svg'
+			__( 'Text and image generation using various models.', 'rtcamps-ai-provider-for-openrouter' ),
+			RTCAMPS_AI_PROVIDER_FOR_OPENROUTER_PLUGIN_DIR . 'assets/images/openrouter-logo.svg'
 		);
 	}
 

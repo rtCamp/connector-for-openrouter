@@ -2,16 +2,16 @@
 /**
  * OpenRouter Model Metadata Directory.
  *
- * @package rtcamp/connector-for-openrouter
+ * @package rtcamp/rtcamps-ai-provider-for-openrouter
  *
  * @since 1.0.0
  */
 
 declare( strict_types=1 );
 
-namespace rtCamp\ConnectorForOpenrouter\Metadata;
+namespace rtCamp\AIProviderForOpenRouter\Metadata;
 
-use rtCamp\ConnectorForOpenrouter\Settings\OpenRouterSettings;
+use rtCamp\AIProviderForOpenRouter\Settings\OpenRouterSettings;
 use WordPress\AiClient\Files\Enums\FileTypeEnum;
 use WordPress\AiClient\Messages\Enums\ModalityEnum;
 use WordPress\AiClient\Providers\ApiBasedImplementation\AbstractApiBasedModelMetadataDirectory;

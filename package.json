@@ -1,5 +1,5 @@
 {
-	"name": "connector-for-openrouter",
+	"name": "rtcamps-ai-provider-for-openrouter",
 	"private": true,
 	"files": [
 		"build",
@@ -8,20 +8,20 @@
 		"src",
 		"README.md",
 		"readme.txt",
-		"connector-for-openrouter.php"
+		"rtcamps-ai-provider-for-openrouter.php"
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/rtcamp/connector-for-openrouter.git"
+		"url": "https://github.com/rtcamp/rtcamps-ai-provider-for-openrouter.git"
 	},
 	"engines": {
 		"node": ">=22.0.0",
 		"npm": ">=10.0.0"
 	},
 	"dependencies": {
-		"@wordpress/api-fetch": "^7.47.0",
-		"@wordpress/dom-ready": "^4.47.0",
-		"@wordpress/i18n": "^6.20.0"
+		"@wordpress/api-fetch": "^7.56.0",
+		"@wordpress/dom-ready": "^4.56.0",
+		"@wordpress/i18n": "^6.29.0"
 	},
 	"devDependencies": {
 		"@wordpress/eslint-plugin": "^24.2.0",
@@ -43,13 +43,19 @@
 		"lint:php:stan": "composer run-script phpstan",
 		"lint:php": "composer run-script lint",
 		"lint": "npm-run-all --parallel lint:*",
-		"i18n:pot": "wp i18n make-pot . languages/connector-for-openrouter.pot --domain=connector-for-openrouter --exclude=node_modules,vendor,tests",
+		"i18n:pot": "wp i18n make-pot . languages/rtcamps-ai-provider-for-openrouter.pot --domain=rtcamps-ai-provider-for-openrouter --exclude=node_modules,vendor,tests",
 		"plugin-zip": "wp-scripts plugin-zip"
 	},
 	"overrides": {
 		"eslint": "^8.57.1",
 		"minimatch": ">=3.1.3",
 		"serialize-javascript": ">=7.0.3",
-		"webpack-dev-server@<=5.2.0": ">=5.2.1"
+		"webpack-dev-server@<=5.2.0": ">=5.2.1",
+		"@opentelemetry/core": ">=2.8.0",
+		"adm-zip": ">=0.6.0",
+		"js-yaml": "^4.2.0",
+		"linkify-it": "^5.0.1",
+		"qs": ">=6.16.0",
+		"extract-zip": ">=2.0.1"
 	}
 }
